@@ -19,6 +19,7 @@ typedef struct {
     Mat img;
     Mat labels;
     bool flag;
+    Mat area_filter;
 } frame_out ;
 
 void paintRectangles(Mat &img, map<int, Rect>&bboxes);

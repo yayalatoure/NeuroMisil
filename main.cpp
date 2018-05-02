@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
 
             img_out = stepDetection_2(img);
 
-            cv::imshow("Video", img_out.img);
+            cv::imshow("Video", img_out.area_filter);
 
 
 //            for (int i = 0; i < img_out.labels.cols; ++i) {

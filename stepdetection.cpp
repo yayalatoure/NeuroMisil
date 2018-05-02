@@ -47,7 +47,8 @@ void getFeet(cv::Mat img, cv::Mat fg, std::map<int, cv::Rect> &bboxes, cv::Mat l
     // Selecciona la región conectada más grande
     int biggestblob = 1;
     getBlobs(labels, bboxes);
-    for(unsigned int j=0;j < bboxes.size(); j++){
+
+    for(unsigned int j=0; j < bboxes.size(); j++){
         if(bboxes[j].area() >= bboxes[biggestblob].area()) biggestblob = j;
     }
 
@@ -165,8 +166,7 @@ Mat stepDetection_1(Mat img){
 frame_out stepDetection_2(Mat img){
 
     /* Inicializacion */
-
-    Mat fg,labels,labels2;
+    Mat fg,labels,labels2, stats, centroids;
 
     double backgroundRatio = 0.7;
     double learningRate = 0.005;
@@ -174,13 +174,12 @@ frame_out stepDetection_2(Mat img){
     int    nmixtures = 3, flag;
     int    history = 150;
 
-
     map<int, Rect> bboxes;
     map<int, Rect> fboxes;
 
     static long frameNumber = 0;
     std::string name1 = "FEED0/";
-    name1+=QString::number(frameNumber).toStdString()+".jpg";
+    name1 += QString::number(frameNumber).toStdString()+".jpg";
 //    cv::imwrite(name1,img);
 
     static frame_out *p_output;
@@ -202,20 +201,39 @@ frame_out stepDetection_2(Mat img){
 
     cv::dilate(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,6)));
     cv::erode(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,6)));
-    cv::connectedComponents(fg, labels, 8, CV_32S);
+    cv::connectedComponentsWithStats(fg, labels, stats, centroids, 8, CV_32S);
+
+    // Filtro por área de componentes conectados
+    Mat sizes = stats.col(4);
+    int min_size, nb_components = stats.rows;
+    nb_components = nb_components - 1;
+    min_size = 25;
+
+    Mat area_filtered(labels.rows, labels.cols, CV_8U, Scalar(255));
+
+    for (int i = 0; i < nb_components; ++i) {
+        if (sizes.at<int>(i) >= min_size) {
+            compare(labels, i+1, area_filtered, CMP_EQ); // Ver si hace lo que se espera
+
+        }
+    }
 
     /*End Segmentation*/
-
-    output.labels = labels;
-
+    for (int j = 0; j < sizes.rows; ++j) {
+        printf("\t %d", sizes.at<int>(j));
+        printf("\n");
+    }
+    printf("==================================== \n");
+    output.labels = fg;
+    output.area_filter = area_filtered;
 
     /*Start Detection*/
     getFeet(img, fg, bboxes, labels, labels2, fboxes);
 
     /* Ahora aplica algoritmo */
-    paintRectangles(img,fboxes);
-    QRect r1 = QRect(fboxes[1].x,fboxes[1].y,fboxes[1].height,fboxes[1].width);
-    QRect r2 = QRect(fboxes[2].x,fboxes[2].y,fboxes[2].height,fboxes[2].width);
+    paintRectangles(img, fboxes);
+    QRect r1 = QRect(fboxes[1].x, fboxes[1].y, fboxes[1].height, fboxes[1].width);
+    QRect r2 = QRect(fboxes[2].x, fboxes[2].y, fboxes[2].height, fboxes[2].width);
 
     v2l = (r1.bottom() - yl2);
     v2r = (r2.bottom() - yr2);
@@ -234,8 +252,8 @@ frame_out stepDetection_2(Mat img){
     if((vxl2 > 2) || (vxl2 < -2)) f1 = 0;
     if((vxr2 > 2) || (vxr2 < -2)) f2 = 0;
 
-    if(f1)rectangle(img,fboxes[1],Scalar(0,255,0),2);
-    if(f2)rectangle(img,fboxes[2],Scalar(0,255,0),2);
+    if(f1)rectangle(img, fboxes[1], Scalar(0,255,0), 2);
+    if(f2)rectangle(img, fboxes[2], Scalar(0,255,0), 2);
 
     yl2 = r1.bottom();
     yr2 = r2.bottom();
@@ -256,8 +274,9 @@ frame_out stepDetection_2(Mat img){
 
     frameNumber++;
 
-    output.flag = 1;
-    output.img  = img;
+    output.flag = true;
+    output.img  = fg;
+
 
     p_output = &output;
 
