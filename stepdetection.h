@@ -2,6 +2,9 @@
 #define STEPDETECTION_H
 
 #include <iostream>
+#include <string>
+#include <iomanip>
+#include <sstream>
 #include <cstring>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -11,6 +14,8 @@
 #include <opencv/cv.h>
 #include <QRect>
 #include <QDir>
+
+
 
 using namespace std;
 using namespace cv;

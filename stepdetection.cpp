@@ -57,12 +57,11 @@ void getFeet(cv::Mat img, cv::Mat fg, std::map<int, cv::Rect> &bboxes, cv::Mat l
 
     Rect ROI;
     ROI.x = bboxes[biggestblob].x;
-    ROI.y = int( bboxes[biggestblob].y + bboxes[biggestblob].height*0.8) ;
+    ROI.y = int( bboxes[biggestblob].y + bboxes[biggestblob].height*0.8);
     ROI.height = int(bboxes[biggestblob].height*0.2);
     ROI.width = bboxes[biggestblob].width;
 
     //
-
     Mat mask = Mat::zeros(fg.size(), CV_8U);
     rectangle(mask, ROI, Scalar(255), CV_FILLED);
     Mat fgROI = Mat::zeros(fg.size(), CV_8U);
@@ -162,7 +161,6 @@ Mat stepDetection_1(Mat img){
     return img;
 }
 
-
 frame_out stepDetection_2(Mat img){
 
     /* Inicializacion */
@@ -171,7 +169,7 @@ frame_out stepDetection_2(Mat img){
     double backgroundRatio = 0.7;
     double learningRate = 0.005;
     double varThreshold = 80;
-    int    nmixtures = 3, flag;
+    int    nmixtures = 3;
     int    history = 150;
 
     map<int, Rect> bboxes;
@@ -203,6 +201,8 @@ frame_out stepDetection_2(Mat img){
     cv::erode(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,6)));
     cv::connectedComponentsWithStats(fg, labels, stats, centroids, 8, CV_32S);
 
+    // MEJORA N°1: Filtro por Área
+    /*
     // Filtro por área de componentes conectados
     Mat sizes = stats.col(4);
     int min_size, nb_components = stats.rows;
@@ -213,12 +213,10 @@ frame_out stepDetection_2(Mat img){
 
     for (int i = 0; i < nb_components; ++i) {
         if (sizes.at<int>(i) >= min_size) {
-            compare(labels, i+1, area_filtered, CMP_EQ); // Ver si hace lo que se espera
-
+            compare(labels, i+1, area_filtered, CMP_EQ); //
         }
     }
 
-    /*End Segmentation*/
     for (int j = 0; j < sizes.rows; ++j) {
         printf("\t %d", sizes.at<int>(j));
         printf("\n");
@@ -226,6 +224,11 @@ frame_out stepDetection_2(Mat img){
     printf("==================================== \n");
     output.labels = fg;
     output.area_filter = area_filtered;
+
+    */
+
+    /*End Segmentation*/
+
 
     /*Start Detection*/
     getFeet(img, fg, bboxes, labels, labels2, fboxes);
@@ -275,7 +278,7 @@ frame_out stepDetection_2(Mat img){
     frameNumber++;
 
     output.flag = true;
-    output.img  = fg;
+    output.img  = img;
 
 
     p_output = &output;
