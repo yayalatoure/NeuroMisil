@@ -4,56 +4,69 @@
 
 int main(int argc, char *argv[]){
 
-
-    cv::Mat img, gray_image;
+    cv::Mat img_cal, img_test, img_proc;
     frame_out img_out;
     std::map<int, Rect> bboxes;
     cv::Mat labels,labels2;
 
     // para lectura de imagenes
-    std::string path;
-    int count = 0, limit = 150;
-    vector<String> filenames;
+    string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/CALIBRACION01/*.jpg";
+    // std::string path_cal = "/home/lalo/Desktop/Dropbox/Proyecto IPD441/Data/Videos/CALIBRACION01/*.jpg";
+    string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/TEST01/*.jpg";
+    // std::string path_cal = "/home/lalo/Desktop/Dropbox/Proyecto IPD441/Data/Videos/TEST01/*.jpg";
+    // Flag para comenzar la detección
+    bool start = false;
+
+    int count_test = 195, count_cal = 0, limit = 150;
+    vector<String> filenames_cal, filenames_test;
+
+    glob(path_test, filenames_test);
+    glob(path_cal , filenames_cal);
+
+    string fileName, substring;
+    fileName = "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil/NeuroMisil_CLion/pasos1.csv";
+    ofstream ofStream(fileName);
+    size_t pos = filenames_test[count_test].find(".jpg");
+    int digits = 5;
+    ofStream << "Frame" << "," << "CenterX" << "," << "CenterY" << "," << "BottomY" << "," << "Pie" << "\n";
 
     while(true){
 
-        if (count < limit){
-            // path dell pc
-            // path = "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil/NeuroMisil_CLion/CALIBRACION01/0";
-            path = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/CALIBRACION01/*.jpg";
+        if (count_cal < limit){
+            img_cal   = imread(filenames_cal[count_cal], CV_LOAD_IMAGE_COLOR);
+            img_test  = imread(filenames_test[count_test], CV_LOAD_IMAGE_COLOR);
+            substring = filenames_test[count_test].substr(pos-digits);
+            img_proc  = img_cal;
         }else{
-            // path dell pc
-            // path = "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil/NeuroMisil_CLion/TEST01/0";
-            path = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/TEST01/*.jpg";
-            if (count == limit) count = 345;
+            img_test  = imread(filenames_test[count_test], CV_LOAD_IMAGE_COLOR);
+            substring = filenames_test[count_test].substr(pos-digits);
+            img_proc  = img_test;
+            start = true;
         }
 
-        glob(path, filenames);
-        img = imread(filenames[count], CV_LOAD_IMAGE_COLOR);
+        if(img_proc.data){
 
+            img_out = stepDetection_2(img_proc, ofStream, substring, start);
 
-        if(img.data){
-
-            img_out = stepDetection_2(img);
-
-            cv::imshow("Video", img_out.img);
+            if(count_cal < limit){
+                if(img_test.data) cv::imshow("Video", img_test);
+//                cv::imshow("Video", img_out.img);
+            }else{
+                cv::imshow("Video", img_out.img);
+            }
 
 //            cv::waitKey(0);
+
         }
 
+        count_cal++;
+        count_test++;
 
-
-        //num_im++;
-
-//        printf("\n %s ",im_name.c_str());
-
-        count++;
-        if(cv::waitKey(10) != -1) break;
+        if(cv::waitKey(20) != -1) break;
 
     }
 
-
-    cv::waitKey(0);
+//    cv::waitKey(0);
     return 0;
 
 }

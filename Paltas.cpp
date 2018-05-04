@@ -1,7 +1,8 @@
 
+#include "stepdetection.h"
+#include <QApplication>
+
 // Archivo que contiene Paltas Perro
-
-
 
 // Para normalizar una imagen resultado de componentes conectados
 

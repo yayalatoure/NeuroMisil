@@ -2,10 +2,12 @@
 #define STEPDETECTION_H
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <iomanip>
 #include <sstream>
 #include <cstring>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -29,10 +31,12 @@ typedef struct {
 
 void paintRectangles(Mat &img, map<int, Rect>&bboxes);
 void getBlobs(Mat labls, map<int, Rect>&bboxes);
-void getFeet(Mat img, Mat fg, map<int, Rect>&bboxes, Mat labels, Mat labels2, map<int, Rect>&fboxes);
+void getFeet(Mat fg, map<int, Rect>&bboxes, Mat labels, Mat labels2, map<int, Rect>&fboxes);
+
+void getFileInput (ofstream &);
 
 Mat  stepDetection_1(Mat img);
-frame_out  stepDetection_2(Mat img);
+frame_out  stepDetection_2(Mat img, ofstream &fileout, string substring, bool start);
 
 
 static int xl1 = 0, yl1 = 0, xr1 = 0, yr1 = 0;
