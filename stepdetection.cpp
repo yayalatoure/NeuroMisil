@@ -8,7 +8,7 @@ void paintRectangles(cv::Mat &img, std::map<int, cv::Rect> &bboxes){
     std::map<int, cv::Rect>::iterator it, it_end = bboxes.end();
 
     for(it = bboxes.begin(); it != it_end; it++) {
-        cv::rectangle(img, it->second, cv::Scalar(0,0,255), 2);
+        cv::rectangle(img, it->second, cv::Scalar(0,255,0), 2);
     }
 
 }
@@ -44,7 +44,8 @@ void getBlobs(cv::Mat labels, std::map<int, cv::Rect> &bboxes) {
 void getFeet(cv::Mat fg, std::map<int, cv::Rect> &bboxes, cv::Mat labels, cv::Mat labels2, std::map<int, cv::Rect> &fboxes){
 
     // Selecciona la región conectada más grande
-    int biggestblob = 1;
+    int Direc = 0, biggestblob = 1;
+    string Direccion;
 
     getBlobs(labels, bboxes);
 //    malloc();
@@ -62,6 +63,21 @@ void getFeet(cv::Mat fg, std::map<int, cv::Rect> &bboxes, cv::Mat labels, cv::Ma
     ROI.height = int(bboxes[biggestblob].height*0.2);
     ROI.width = bboxes[biggestblob].width;
 
+    Xk1 = ROI.x;
+    Direc = (Xk1 - Xk0);
+    Xk0 = Xk1;
+
+    if(Direc == 0 ){
+        Direccion = flag_direc;
+    }else{
+        Direccion = (Direc < 0) ? "Left" : "Rigth" ;
+    }
+
+
+    cout << "\n Dirección: " <<  Direccion << endl;
+    flag_direc = Direccion;
+
+
     //
     Mat mask = Mat::zeros(fg.size(), CV_8U);
     rectangle(mask, ROI, Scalar(255), CV_FILLED);
@@ -75,93 +91,13 @@ void getFeet(cv::Mat fg, std::map<int, cv::Rect> &bboxes, cv::Mat labels, cv::Ma
 
 }
 
-//Mat stepDetection_1(Mat img){
-//
-//    Mat fg,labels,labels2;
-//    double backgroundRatio = 0.7;
-//    double learningRate = 0.0025;
-//    double varThreshold = 80;
-//    int    nmixtures = 3;
-//    int    history = 200;
-//    map<int, Rect>bboxes;
-//    map<int, Rect>fboxes;
-//
-//    // Guardando Video por frame en directorio name
-//    static long frameNumber = 0;
-//
-//    cv::imshow("feed image", img);
-//
-//    static int v1r = 0, v2r = 0, ar = 0;
-//    static int v1l = 0, v2l = 0, al = 0;
-//    int vxl2 = 0, vxr2 = 0;
-//    int f1 = 0, f2 = 0;
-//    static cv::Ptr<cv::BackgroundSubtractorMOG2> mog = cv::createBackgroundSubtractorMOG2(history, varThreshold, true);
-//
-//    mog->setNMixtures(nmixtures);
-//    mog->setBackgroundRatio(backgroundRatio);
-//    mog->setShadowValue(0);
-//
-//    /* Start Segmentation */
-//
-//    mog->apply(img,fg,learningRate);
-//
-//    cv::dilate(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,6)));
-//    cv::erode(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,6)));
-//    cv::connectedComponents(fg, labels, 8, CV_32S);
-//
-//    /* End Segmentation */
-//
-//    /* Start Detection */
-//    getFeet(img, fg, bboxes, labels, labels2, fboxes);
-//
-//    paintRectangles(img,fboxes);
-//    QRect r1 = QRect(fboxes[1].x,fboxes[1].y,fboxes[1].height,fboxes[1].width);
-//    QRect r2 = QRect(fboxes[2].x,fboxes[2].y,fboxes[2].height,fboxes[2].width);
-//
-//    v2l = (r1.bottom() - yl1);
-//    v2r = (r2.bottom() - yr1);
-//    vxl2 = (r1.center().x() - xl1);
-//    vxr2 = (r2.center().x() - xr1);
-//
-//    al = (v2l - v1l);
-//    ar = (v2r - v1r);
-//
-//    if(al <= 0 || v2l == 0) f1 = 1;
-//    if(ar <= 0 || v2r == 0) f2 = 1;
-//
-//    if((f1 && (v2l > 1)) || ((al > 1) && (v2l != 0)))f1 = 0;
-//    if((f2 && (v2r > 1)) || ((ar > 1) && (v2r != 0)))f2 = 0;
-//
-//    if((vxl2 > 2) || (vxl2 < -2)) f1 = 0;
-//    if((vxr2 > 2) || (vxr2 < -2)) f2 = 0;
-//
-//    if(f1)rectangle(img,fboxes[1],Scalar(0,255,0),2);
-//    if(f2)rectangle(img,fboxes[2],Scalar(0,255,0),2);
-//
-//    yl1 = r1.bottom();
-//    yr1 = r2.bottom();
-//    xl1 = r1.center().x();
-//    xr1 = r2.center().x();
-//
-//    v1l = v2l;
-//    v1r = v2r;
-//
-//    std::string name2 = "SEGMENTED1/";
-//    bboxes.clear();
-//    /*End Detection*/
-//
-////    name2+=QString::number(frameNumber).toStdString()+".jpg";
-////    cv::imwrite(name2,img);
-//
-//    frameNumber++;
-//
-//    return img;
-//}
+
 
 frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool start){
 
     /* Inicializacion */
-    Mat fg,labels,labels2, stats, centroids;
+    Mat fg, labels, labels2, stats, centroids;
+
 
     double backgroundRatio = 0.7;
     double learningRate = 0.005;
@@ -174,7 +110,6 @@ frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool sta
 
     static int frameNumber = 0;
 
-//    static frame_out *p_output;
     static frame_out  output;
 
     static cv::Ptr<cv::BackgroundSubtractorMOG2> mog = cv::createBackgroundSubtractorMOG2(history, varThreshold, true);
@@ -189,38 +124,25 @@ frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool sta
     cv::erode(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,6)));
     cv::connectedComponentsWithStats(fg, labels, stats, centroids, 8, CV_32S);
 
-    // MEJORA N°1: Filtro por Área
-    /*
-    // Filtro por área de componentes conectados
-    Mat sizes = stats.col(4);
-    int min_size, nb_components = stats.rows;
-    nb_components = nb_components - 1;
-    min_size = 25;
 
-    Mat area_filtered(labels.rows, labels.cols, CV_8U, Scalar(255));
-
-    for (int i = 0; i < nb_components; ++i) {
-        if (sizes.at<int>(i) >= min_size) {
-            compare(labels, i+1, area_filtered, CMP_EQ); //
-        }
-    }
-
-    for (int j = 0; j < sizes.rows; ++j) {
-        printf("\t %d", sizes.at<int>(j));
-        printf("\n");
-    }
-    printf("==================================== \n");
-    output.labels = fg;
-    output.area_filter = area_filtered;
-    */
-    /*End Segmentation*/
 
     /*Start Detection*/
+
+    float xp, yp, height_p, widht_p;
 
     if(start){
 
         getFeet(fg, bboxes, labels, labels2, fboxes);
+        paintRectangles(img, fboxes);
 
+        /*
+        xp = fboxes[1].x;
+        yp = fboxes[1].y;
+        height_p = fboxes[1].height;
+        widht_p = fboxes[1].width;
+        */
+
+        /*
         static int v1r = 0, v2r = 0, ar = 0;
         static int v1l = 0, v2l = 0, al = 0;
         int vxl2 = 0, vxr2 = 0;
@@ -242,8 +164,8 @@ frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool sta
         if(al <= 0 || v2l == 0) f1 = 1;
         if(ar <= 0 || v2r == 0) f2 = 1;
 
-        if((f1 && (v2l > 1)) || ((al > 1) && (v2l != 0)))f1 = 0;
-        if((f2 && (v2r > 1)) || ((ar > 1) && (v2r != 0)))f2 = 0;
+        if((f1 && (v2l > 1)) || ((al > 1) && (v2l != 0)) || (fboxes[1].x == 0) || (fboxes[1].y == 0) ) f1 = 0;
+        if((f2 && (v2r > 1)) || ((ar > 1) && (v2r != 0)) || (fboxes[2].x == 0) || (fboxes[2].y == 0) ) f2 = 0;
 
         if((vxl2 > 2) || (vxl2 < -2)) f1 = 0;
         if((vxr2 > 2) || (vxr2 < -2)) f2 = 0;
@@ -264,6 +186,7 @@ frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool sta
 
         v1l = v2l;
         v1r = v2r;
+        */
 
     }
 
@@ -275,6 +198,7 @@ frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool sta
 
     output.flag = true;
     output.img  = img;
+    output.fboxes = fboxes;
 
 
     return *(&output);

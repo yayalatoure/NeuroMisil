@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/NeuroMisil.dir/main.cpp.o"
   "CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o"
+  "CMakeFiles/NeuroMisil.dir/Paltas.cpp.o"
   "NeuroMisil.pdb"
   "NeuroMisil"
 )

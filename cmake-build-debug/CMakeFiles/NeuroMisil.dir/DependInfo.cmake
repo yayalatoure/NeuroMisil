@@ -4,8 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/lalo/Desktop/NeuroMisil/NeuroMisil_CLion/main.cpp" "/home/lalo/Desktop/NeuroMisil/NeuroMisil_CLion/cmake-build-debug/CMakeFiles/NeuroMisil.dir/main.cpp.o"
-  "/home/lalo/Desktop/NeuroMisil/NeuroMisil_CLion/stepdetection.cpp" "/home/lalo/Desktop/NeuroMisil/NeuroMisil_CLion/cmake-build-debug/CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o"
+  "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Paltas.cpp" "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/NeuroMisil.dir/Paltas.cpp.o"
+  "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/main.cpp" "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/NeuroMisil.dir/main.cpp.o"
+  "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.cpp" "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
