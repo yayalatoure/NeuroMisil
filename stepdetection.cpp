@@ -120,8 +120,8 @@ frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool sta
     /*Start Segmentation*/
     mog->apply(img, fg, 2*learningRate);
 
-    cv::dilate(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,6)));
-    cv::erode(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,6)));
+    cv::dilate(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,5)));
+    cv::erode(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4,6))); //(3,6)
     cv::connectedComponentsWithStats(fg, labels, stats, centroids, 8, CV_32S);
 
 
