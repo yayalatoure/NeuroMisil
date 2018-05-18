@@ -91,7 +91,13 @@ void getFeet(cv::Mat fg, std::map<int, cv::Rect> &bboxes, cv::Mat labels, cv::Ma
 
 }
 
-
+double distance(cv::Point center_kalman, cv::Point center_measured){
+    double dx = 0, dy = 0, result=0;
+    dx = pow((center_kalman.x - center_measured.x), 2);
+    dy = pow((center_kalman.y - center_measured.y), 2);
+    result = sqrt(dx + dy);
+    return result;
+}
 
 frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool start){
 

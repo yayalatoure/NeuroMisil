@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <sstream>
 #include <cstring>
+#include <math.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -40,6 +41,7 @@ void getFileInput (ofstream &);
 Mat  stepDetection_1(Mat img);
 frame_out  stepDetection_2(Mat img, ofstream &fileout, string substring, bool start);
 
+double distance(cv::Point center_kalman, cv::Point center_measured);
 
 static int xl1 = 0, yl1 = 0, xr1 = 0, yr1 = 0;
 static int xl2 = 0, yl2 = 0, xr2 = 0, yr2 = 0;

@@ -99,17 +99,31 @@ int main(int argc, char *argv[]){
     glob(path_test, filenames_test);
     glob(path_cal , filenames_cal);
 
+    //// Logging pasos (frames) ////
+//    int digits = 5;
+//    string fileName, substring;
+//    fileName = "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Logging/pasos1.csv";
+//    ofstream ofStream(fileName);
+//    size_t pos = filenames_test[count_test].find(".jpg");
+//    ofStream << "Frame" << "," << "CenterX" << "," << "CenterY" << "," << "BottomY" << "," << "Pie" << "\n";
+
+    //// Logging error Kalman (frames) ////
     int digits = 5;
     string fileName, substring;
-    fileName = "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil/NeuroMisil_CLion/pasos1.csv";
+    fileName = "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Logging/error_KalmanRight.csv";
     ofstream ofStream(fileName);
     size_t pos = filenames_test[count_test].find(".jpg");
-    ofStream << "Frame" << "," << "CenterX" << "," << "CenterY" << "," << "BottomY" << "," << "Pie" << "\n";
+    ofStream << "Frame" << "," << "CX_Kalman" << "," << "CY_Kalman" << "," << "CX_Measured" << "," << "CY,Measured" << "," << "Pie" << "\n";
+
 
     int frames_pasos = 0;
-
     char ch = 0;
     int  dT = 1;
+
+    // measured center
+    cv::Point center_measured, center_kalman;
+    double error = 0;
+
 
     //////////////////////////////////////////////////////////
     /////////////////////// Algoritmo ////////////////////////
@@ -126,7 +140,7 @@ int main(int argc, char *argv[]){
         //ticks = (double) cv::getTickCount();
         //double dT = (ticks - precTick) / cv::getTickFrequency(); //seconds
 
-        /////// Frame Acquisition ///////
+        ////////// Frame Acquisition /////////
         if (count_cal < limit){
             img_cal   = imread(filenames_cal[count_cal], CV_LOAD_IMAGE_COLOR);
             img_test  = imread(filenames_test[count_test], CV_LOAD_IMAGE_COLOR);
@@ -138,6 +152,7 @@ int main(int argc, char *argv[]){
             substring = filenames_test[count_test].substr(pos-digits);
             img_proc  = img_test;
             start = true;
+            found = true;
         }
         // Obtain feet's rectangles
         if(img_proc.data) {
@@ -148,8 +163,8 @@ int main(int argc, char *argv[]){
                 } else {
                     cv::imshow("Video", img_out.img);
                 }
+        /////// Frame Acquisition Finish //////
 
-            //// Frame Acquisition Finish ////
 
             if (found){
                 // >>>> Matrix A
@@ -171,10 +186,13 @@ int main(int argc, char *argv[]){
                 predRect.y = static_cast<int>(state.at<float>(1) - state.at<float>(5)/2);
                 cv::rectangle(img_out.img, predRect, CV_RGB(255,0,0), 2);
                 //// Predicted Point ////
-                cv::Point center;
-                center.x = static_cast<int>(state.at<float>(0));
-                center.y = static_cast<int>(state.at<float>(1));
-                cv::circle(img_out.img, center, 2, CV_RGB(255,0,0), -1);
+                center_kalman.x = static_cast<int>(state.at<float>(0));
+                center_kalman.y = static_cast<int>(state.at<float>(1));
+                cv::circle(img_out.img, center_kalman, 2, CV_RGB(255,0,0), -1);
+
+                //// Logging ////
+                if(start)
+                    ofStream << substring << "," << center_kalman.x << "," << center_kalman.y << ",";
 
             }
             ///////////////////////////////////
@@ -188,30 +206,42 @@ int main(int argc, char *argv[]){
             //  Si existe una diferencia muy grande entre el  centro x,y predicho por kalman
             //  y el x,y medido con la segmentacion se reseteara el filtro y se considerara que se obtuvo un paso
 
-            int centro_x = img_out.fboxes[1].x + img_out.fboxes[1].width/ 2;
 
-            if(state.at<float>(0) > centro_x) {
-                if ((state.at<float>(0) - centro_x) > 7){
-                    found = false;
-                    frames_pasos = frames_pasos + 1;
-                }
+            if(img_out.fboxes.size() == 1) {
+                center_measured.x = img_out.fboxes[1].x + img_out.fboxes[1].width / 2;
+                center_measured.y = img_out.fboxes[1].y + img_out.fboxes[1].height / 2;
+            }else{
+                center_measured.x = img_out.fboxes[2].x + img_out.fboxes[2].width / 2;
+                center_measured.y = img_out.fboxes[2].y + img_out.fboxes[2].height / 2;
             }
 
-            if(state.at<float>(0) < centro_x){
-                if( (centro_x - state.at<float>(0)) > 7) {
-                    found = false;
-                    frames_pasos = frames_pasos + 1;
-                }
+            error = distance(center_kalman, center_measured);
+
+            if ( abs(error) > 1){
+                found = false;
             }
+
+//            if(state.at<float>(0) > center_measured.x) {
+//                if ((state.at<float>(0) - center_measured.x) > 5){
+//                    found = false;
+//                }
+//            }
+//
+//            if(state.at<float>(0) < center_measured.x){
+//                if( (center_measured.x - state.at<float>(0)) > 5) {
+//                    found = false;
+//                }
+//            }
 
             ///////////////////////////////////
             /////// Kalman Reset Finish ///////
             ///////////////////////////////////
+            if(start)
+                ofStream << center_measured.x << "," << center_measured.y << "," << "Rigth" << "\n";
 
             cout << "Frame actual: " << filenames_test[count_test].substr(pos-digits) << endl;
-            cout << "Posicion X medida: " << centro_x << endl;
             cout << "Posicion X predecida: " << state.at<float>(0) << endl;
-            cout << "Pasos Encontrados: " << frames_pasos << endl;
+            cout << "Posicion X medida: " << center_measured.x << endl;
 
 
             ///////////////////////////////////
@@ -229,7 +259,7 @@ int main(int argc, char *argv[]){
             }
             else{
                 if(img_out.fboxes.size() == 1){
-                    meas.at<float>(0) = img_out.fboxes[1].x + float(img_out.fboxes[1].width)/2;
+                    meas.at<float>(0) = img_out.fboxes[1].x + float(img_out.fboxes[1].width);
                     meas.at<float>(1) = img_out.fboxes[1].y + float(img_out.fboxes[1].height)/2;
                     meas.at<float>(2) = (float)state.at<float>(4);
                     meas.at<float>(3) = (float)state.at<float>(5);
@@ -271,8 +301,6 @@ int main(int argc, char *argv[]){
             ////////////////////////////////////
             /////// Kalman Update Finish ///////
             ////////////////////////////////////
-
-
 
         }
 
