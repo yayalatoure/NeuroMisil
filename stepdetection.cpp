@@ -95,7 +95,7 @@ double distance(cv::Point center_kalman, cv::Point center_measured){
     double dx = 0, dy = 0, result=0;
     dx = pow((center_kalman.x - center_measured.x), 2);
     dy = pow((center_kalman.y - center_measured.y), 2);
-    result = sqrt(dx + dy);
+    result = dx; // + dy; //sqrt(dx + dy);
     return result;
 }
 

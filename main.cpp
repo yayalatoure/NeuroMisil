@@ -69,8 +69,8 @@ int main(int argc, char *argv[]){
 //    cv::setIdentity(kf.processNoiseCov, cv::Scalar(1e-2));
     kf.processNoiseCov.at<float>(0) = 1e-2;
     kf.processNoiseCov.at<float>(7) = 1e-2;
-    kf.processNoiseCov.at<float>(14) = 1e-2;// 5.0f
-    kf.processNoiseCov.at<float>(21) = 1e-2;// 5.0f
+    kf.processNoiseCov.at<float>(14) = 5;// 5.0f
+    kf.processNoiseCov.at<float>(21) = 5;// 5.0f
     kf.processNoiseCov.at<float>(28) = 1e-2;
     kf.processNoiseCov.at<float>(35) = 1e-2;
 
@@ -119,10 +119,12 @@ int main(int argc, char *argv[]){
     int frames_pasos = 0;
     char ch = 0;
     int  dT = 1;
+    bool ocult;
+    cv::Rect predRect;
 
     // measured center
     cv::Point center_measured, center_kalman;
-    double error = 0;
+    double errork = 0, errork1 = 0, errork2 = 0, errorp = 0;
 
 
     //////////////////////////////////////////////////////////
@@ -157,13 +159,13 @@ int main(int argc, char *argv[]){
         // Obtain feet's rectangles
         if(img_proc.data) {
 
-                img_out = stepDetection_2(img_proc, ofStream, substring, start);
-                if (count_cal < limit) {
-                    if (img_test.data) cv::imshow("Video", img_test);
-                } else {
-                    cv::imshow("Video", img_out.img);
-                }
-        /////// Frame Acquisition Finish //////
+            img_out = stepDetection_2(img_proc, ofStream, substring, start);
+            if (count_cal < limit) {
+                if (img_test.data) cv::imshow("Video", img_test);
+            } else {
+                cv::imshow("Video", img_out.img);
+            }
+            /////// Frame Acquisition Finish //////
 
 
             if (found){
@@ -178,8 +180,7 @@ int main(int argc, char *argv[]){
                 state = kf.predict();
                 //cout << "State post:" << endl << state << endl;
 
-                ////// Predicted Rect //////
-                cv::Rect predRect;
+                ////// Predicted Rect Red //////
                 predRect.width = static_cast<int>(state.at<float>(4));
                 predRect.height = static_cast<int>(state.at<float>(5));
                 predRect.x = static_cast<int>(state.at<float>(0) - state.at<float>(4)/2);
@@ -204,10 +205,10 @@ int main(int argc, char *argv[]){
             ///////////////////////////////////
 
             //  Si existe una diferencia muy grande entre el  centro x,y predicho por kalman
-            //  y el x,y medido con la segmentacion se reseteara el filtro y se considerara que se obtuvo un paso
+            //  y el centro x,y medido con la segmentacion se reseteara el filtro y se considerara que se obtuvo un paso
 
-
-            if(img_out.fboxes.size() == 1) {
+            ocult = bool(img_out.fboxes.size() == 1);
+            if(ocult) {
                 center_measured.x = img_out.fboxes[1].x + img_out.fboxes[1].width / 2;
                 center_measured.y = img_out.fboxes[1].y + img_out.fboxes[1].height / 2;
             }else{
@@ -215,12 +216,19 @@ int main(int argc, char *argv[]){
                 center_measured.y = img_out.fboxes[2].y + img_out.fboxes[2].height / 2;
             }
 
-            error = distance(center_kalman, center_measured);
+            errork2 = distance(center_kalman, center_measured);
 
-            if ( abs(error) > 1){
+            if ( abs(errork1) > 1 ){
                 found = false;
             }
 
+            if(!ocult & found){
+                errorp = (errork2 + errork1)/2;
+                if(errorp < 3)
+                    cv::rectangle(img_out.img, predRect, CV_RGB(0,0,255), 2);
+            }
+
+//
 //            if(state.at<float>(0) > center_measured.x) {
 //                if ((state.at<float>(0) - center_measured.x) > 5){
 //                    found = false;
@@ -236,6 +244,7 @@ int main(int argc, char *argv[]){
             ///////////////////////////////////
             /////// Kalman Reset Finish ///////
             ///////////////////////////////////
+
             if(start)
                 ofStream << center_measured.x << "," << center_measured.y << "," << "Rigth" << "\n";
 
@@ -303,6 +312,8 @@ int main(int argc, char *argv[]){
             ////////////////////////////////////
 
         }
+
+        errork1 = errork2;
 
         count_cal++;
         count_test++;

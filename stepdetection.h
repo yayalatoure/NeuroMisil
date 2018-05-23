@@ -20,7 +20,6 @@
 #include <QDir>
 
 
-
 using namespace std;
 using namespace cv;
 
