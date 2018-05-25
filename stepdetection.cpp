@@ -99,6 +99,51 @@ double distance(cv::Point center_kalman, cv::Point center_measured){
     return result;
 }
 
+void KalmanInit(cv::KalmanFilter kf){
+
+    // Kalman Filter Init
+
+    // Transition State Matrix A
+    // Note: set dT at each processing step!
+    // [ 1 0 dT 0  0 0 ]
+    // [ 0 1 0  dT 0 0 ]
+    // [ 0 0 1  0  0 0 ]
+    // [ 0 0 0  1  0 0 ]
+    // [ 0 0 0  0  1 0 ]
+    // [ 0 0 0  0  0 1 ]
+    cv::setIdentity(kf.transitionMatrix);
+
+    // Measure Matrix H
+    // [ 1 0 0 0 0 0 ]
+    // [ 0 1 0 0 0 0 ]
+    // [ 0 0 0 0 1 0 ]
+    // [ 0 0 0 0 0 1 ]
+    kf.measurementMatrix = cv::Mat::zeros(measSize, stateSize, type);
+    kf.measurementMatrix.at<float>(0) = 1.0f;
+    kf.measurementMatrix.at<float>(7) = 1.0f;
+    kf.measurementMatrix.at<float>(16) = 1.0f;
+    kf.measurementMatrix.at<float>(23) = 1.0f;
+
+    // Process Noise Covariance Matrix Q
+    // [ Ex   0   0     0     0    0  ]
+    // [ 0    Ey  0     0     0    0  ]
+    // [ 0    0   Ev_x  0     0    0  ]
+    // [ 0    0   0     Ev_y  0    0  ]
+    // [ 0    0   0     0     Ew   0  ]
+    // [ 0    0   0     0     0    Eh ]
+    //cv::setIdentity(kf.processNoiseCov, cv::Scalar(1e-2));
+    kf.processNoiseCov.at<float>(0) = 1e-2;
+    kf.processNoiseCov.at<float>(7) = 1e-2;
+    kf.processNoiseCov.at<float>(14) = 1e-2;// 5.0f
+    kf.processNoiseCov.at<float>(21) = 1e-2;// 5.0f
+    kf.processNoiseCov.at<float>(28) = 1e-2;
+    kf.processNoiseCov.at<float>(35) = 1e-2;
+
+    // Measures Noise Covariance Matrix R
+    cv::setIdentity(kf.measurementNoiseCov, cv::Scalar(1e-2));
+
+}
+
 frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool start){
 
     /* Inicializacion */
