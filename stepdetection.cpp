@@ -144,11 +144,10 @@ void KalmanInit(cv::KalmanFilter kf){
 
 }
 
-frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool start){
+frame_out FindBoxes(Mat img, ofstream &fileout, bool start){
 
     /* Inicializacion */
     Mat fg, labels, labels2, stats, centroids;
-
 
     double backgroundRatio = 0.7;
     double learningRate = 0.005;
@@ -168,89 +167,25 @@ frame_out stepDetection_2(Mat img, ofstream &fileout, string substring, bool sta
     mog->setBackgroundRatio(backgroundRatio);
     mog->setShadowValue(0);
 
-    /*Start Segmentation*/
+    //// Start Segmentation ////
     mog->apply(img, fg, 2*learningRate);
 
     cv::dilate(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,5)));
     cv::erode(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4,6))); //(3,6)
     cv::connectedComponentsWithStats(fg, labels, stats, centroids, 8, CV_32S);
 
-
-
-    /*Start Detection*/
-
-    float xp, yp, height_p, widht_p;
-
     if(start){
-
         getFeet(fg, bboxes, labels, labels2, fboxes);
         paintRectangles(img, fboxes);
-
-        /*
-        xp = fboxes[1].x;
-        yp = fboxes[1].y;
-        height_p = fboxes[1].height;
-        widht_p = fboxes[1].width;
-        */
-
-        /*
-        static int v1r = 0, v2r = 0, ar = 0;
-        static int v1l = 0, v2l = 0, al = 0;
-        int vxl2 = 0, vxr2 = 0;
-        int f1 = 0, f2 = 0;
-
-        paintRectangles(img, fboxes);
-
-        QRect r1 = QRect(fboxes[1].x, fboxes[1].y, fboxes[1].height, fboxes[1].width);
-        QRect r2 = QRect(fboxes[2].x, fboxes[2].y, fboxes[2].height, fboxes[2].width);
-
-        v2l  = (r1.bottom() - yl2);
-        v2r  = (r2.bottom() - yr2);
-        vxl2 = (r1.center().x() - xl2);
-        vxr2 = (r2.center().x() - xr2);
-
-        al = (v2l - v1l);
-        ar = (v2r - v1r);
-
-        if(al <= 0 || v2l == 0) f1 = 1;
-        if(ar <= 0 || v2r == 0) f2 = 1;
-
-        if((f1 && (v2l > 1)) || ((al > 1) && (v2l != 0)) || (fboxes[1].x == 0) || (fboxes[1].y == 0) ) f1 = 0;
-        if((f2 && (v2r > 1)) || ((ar > 1) && (v2r != 0)) || (fboxes[2].x == 0) || (fboxes[2].y == 0) ) f2 = 0;
-
-        if((vxl2 > 2) || (vxl2 < -2)) f1 = 0;
-        if((vxr2 > 2) || (vxr2 < -2)) f2 = 0;
-
-        if(f1){
-            rectangle(img, fboxes[1], Scalar(0,255,0), 2);
-            fileout << substring << "," << r1.center().x() << "," << r1.center().y() << "," << r1.bottom() << "," << "Id_1" << "\n";
-        }
-        if(f2){
-            rectangle(img, fboxes[2], Scalar(0,255,0), 2);
-            fileout << substring << "," << r2.center().x() << "," << r2.center().y() << "," << r2.bottom() << "," << "Id_2" << "\n";
-        }
-
-        yl2 = r1.bottom();
-        yr2 = r2.bottom();
-        xl2 = r1.center().x();
-        xr2 = r2.center().x();
-
-        v1l = v2l;
-        v1r = v2r;
-        */
-
     }
 
     bboxes.clear();
-
-    /*End Detection*/
 
     frameNumber++;
 
     output.flag = true;
     output.img  = img;
     output.fboxes = fboxes;
-
 
     return *(&output);
 }

@@ -36,10 +36,9 @@ void getFeet(Mat fg, map<int, Rect>&bboxes, Mat labels, Mat labels2, map<int, Re
 
 //// New Functions ////
 void getFileInput (ofstream &);
-Mat  stepDetection_1(Mat img);
 void KalmanInit(cv::KalmanFilter kf);
 double distance(cv::Point center_kalman, cv::Point center_measured);
-frame_out  stepDetection_2(Mat img, ofstream &fileout, string substring, bool start);
+frame_out FindBoxes(Mat img, ofstream &fileout, bool start);
 
 //// New Variables ////
 static int Xk0 = 0, Xk1 = 0, Lk1 = 0, Rk1 = 0;

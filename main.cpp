@@ -18,12 +18,8 @@ using namespace cv;
 
 int main(int argc, char *argv[]){
 
-
     //// Kalmar Init ////
     KalmanInit(kf_R);
-
-    int notFoundCount = 0;
-    bool found = false;
 
     cv::Mat img_cal, img_test, img_proc, labels, labels2;
     frame_out img_out = frame_out();
@@ -37,19 +33,11 @@ int main(int argc, char *argv[]){
     // Flag start detection
     bool start = false;
 
-    int count_test = 195, count_cal = 0, limit = 150;
+    int count_test = 195+145, count_cal = 0, limit = 150-145;
     vector<String> filenames_cal, filenames_test;
 
     glob(path_test, filenames_test);
     glob(path_cal , filenames_cal);
-
-    //// Logging pasos (frames) ////
-//    int digits = 5;
-//    string fileName, substring;
-//    fileName = "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Logging/pasos1.csv";
-//    ofstream ofStream(fileName);
-//    size_t pos = filenames_test[count_test].find(".jpg");
-//    ofStream << "Frame" << "," << "CenterX" << "," << "CenterY" << "," << "BottomY" << "," << "Pie" << "\n";
 
     //// Logging error Kalman (frames) ////
     int digits = 5;
@@ -59,27 +47,20 @@ int main(int argc, char *argv[]){
     size_t pos = filenames_test[count_test].find(".jpg");
     ofStream << "Frame" << "," << "CX_Kalman" << "," << "CY_Kalman" << "," << "CX_Measured" << "," << "CY,Measured" << "," << "Pie" << "\n";
 
-
-    int frames_pasos = 0;
     char ch = 0;
     int  dT = 1;
+    int notFoundCount = 0;
     bool ocult;
+    bool found = false;
     cv::Rect predRect;
 
     // measured center
     cv::Point center_measured, center_kalman;
-    double errork = 0, errork1 = 0, errork2 = 0, errorp = 0;
+    double errork1 = 0, errork2 = 0, errorp = 0;
 
-
-    //////////////////////////////////////////////////////////
-    /////////////////////// Algoritmo ////////////////////////
-    //////////////////////////////////////////////////////////
+    ///// Algoritmo /////
 
     while(ch != 'q' && ch != 'Q'){
-
-        ///////////////////////////////////
-        //////// Kalman Prediction ////////
-        ///////////////////////////////////
 
         //double ticks = 0;
         //double precTick = ticks;
@@ -100,29 +81,22 @@ int main(int argc, char *argv[]){
             start = true;
             found = true;
         }
+
         // Obtain feet's rectangles
         if(img_proc.data) {
 
-            img_out = stepDetection_2(img_proc, ofStream, substring, start);
-            if (count_cal < limit) {
-                if (img_test.data) cv::imshow("Video", img_test);
-            } else {
-                cv::imshow("Video", img_out.img);
-            }
-            /////// Frame Acquisition Finish //////
+            img_out = FindBoxes(img_proc, ofStream, start);
 
-
+            //////// Kalman Prediction ////////
             if (found){
-                // >>>> Matrix A
+
                 kf_R.transitionMatrix.at<float>(2) = dT;
                 kf_R.transitionMatrix.at<float>(9) = dT;
-                // <<<< Matrix A
 
                 // cout << "dT:" << endl << dT << endl;
 
                 /////// Prediction ///////
                 state_R = kf_R.predict();
-                //cout << "State post:" << endl << state << endl;
 
                 ////// Predicted Rect Red //////
                 predRect.width = static_cast<int>(state_R.at<float>(4));
@@ -140,13 +114,10 @@ int main(int argc, char *argv[]){
                     ofStream << substring << "," << center_kalman.x << "," << center_kalman.y << ",";
 
             }
-            ///////////////////////////////////
-            ///// Kalman Prediction Finish ////
-            ///////////////////////////////////
+            ///// Kalman Prediction Finish /////
 
-            ///////////////////////////////////
-            /////////// Kalman Reset //////////
-            ///////////////////////////////////
+
+            ////// Kalman Evaluate Reset ///////
 
             //  Si existe una diferencia muy grande entre el  centro x,y predicho por kalman
             //  y el centro x,y medido con la segmentacion se reseteara el filtro y se considerara que se obtuvo un paso
@@ -172,22 +143,7 @@ int main(int argc, char *argv[]){
                     cv::rectangle(img_out.img, predRect, CV_RGB(0,0,255), 2);
             }
 
-//
-//            if(state.at<float>(0) > center_measured.x) {
-//                if ((state.at<float>(0) - center_measured.x) > 5){
-//                    found = false;
-//                }
-//            }
-//
-//            if(state.at<float>(0) < center_measured.x){
-//                if( (center_measured.x - state.at<float>(0)) > 5) {
-//                    found = false;
-//                }
-//            }
-
-            ///////////////////////////////////
-            /////// Kalman Reset Finish ///////
-            ///////////////////////////////////
+            ///// Logging /////
 
             if(start)
                 ofStream << center_measured.x << "," << center_measured.y << "," << "Rigth" << "\n";
@@ -196,36 +152,32 @@ int main(int argc, char *argv[]){
             cout << "Posicion X predecida: " << state_R.at<float>(0) << endl;
             cout << "Posicion X medida: " << center_measured.x << endl;
 
-
-            ///////////////////////////////////
             ////////// Kalman Update //////////
-            ///////////////////////////////////
 
+            // Cuando no encuentra caja
             if (img_out.fboxes[1].width <= 0){
                 notFoundCount++;
-                //cout << "notFoundCount:" << notFoundCount << endl;
                 if( notFoundCount >= 100 ){
                     found = false;
-                }
-                else
+                }else
                     kf_R.statePost = state_R;
-            }
-            else{
-                if(img_out.fboxes.size() == 1){
+            }else{
+                // Si se encuemtra una caja, realiza medición
+                // Si hay ocultamiento asigna a medida derecha centro de primer cuadro detectado
+                if (img_out.fboxes.size() == 1) {
                     meas_R.at<float>(0) = img_out.fboxes[1].x + float(img_out.fboxes[1].width);
-                    meas_R.at<float>(1) = img_out.fboxes[1].y + float(img_out.fboxes[1].height)/2;
-                    meas_R.at<float>(2) = (float)state_R.at<float>(4);
-                    meas_R.at<float>(3) = (float)state_R.at<float>(5);
-                }else{
-                    meas_R.at<float>(0) = img_out.fboxes[2].x + float(img_out.fboxes[2].width)/2;
-                    meas_R.at<float>(1) = img_out.fboxes[2].y + float(img_out.fboxes[2].height)/2;
-                    meas_R.at<float>(2) = (float)img_out.fboxes[2].width;
-                    meas_R.at<float>(3) = (float)img_out.fboxes[2].height;
+                    meas_R.at<float>(1) = img_out.fboxes[1].y + float(img_out.fboxes[1].height) / 2;
+                    meas_R.at<float>(2) = (float) state_R.at<float>(4);
+                    meas_R.at<float>(3) = (float) state_R.at<float>(5);
+                // Si no hay ocultamiento adigna a medida derecha centro de segundo cuadro detectado
+                } else {
+                    meas_R.at<float>(0) = img_out.fboxes[2].x + float(img_out.fboxes[2].width) / 2;
+                    meas_R.at<float>(1) = img_out.fboxes[2].y + float(img_out.fboxes[2].height) / 2;
+                    meas_R.at<float>(2) = (float) img_out.fboxes[2].width;
+                    meas_R.at<float>(3) = (float) img_out.fboxes[2].height;
                 }
-                notFoundCount = 0;
 
                 if (!found) { // First detection!
-
                     // >>>> Initialization
                     kf_R.errorCovPre.at<float>(0) = 1; // px
                     kf_R.errorCovPre.at<float>(7) = 1; // px
@@ -241,30 +193,29 @@ int main(int argc, char *argv[]){
                     state_R.at<float>(4) = meas_R.at<float>(2);
                     state_R.at<float>(5) = meas_R.at<float>(3);
                     // <<<< Initialization
-
+                    found = true;
                     kf_R.statePost = state_R;
 
-                    found = true;
-
-                }else
+                }else{
                     kf_R.correct(meas_R); // Kalman Correction
-
-                //cout << "Measure matrix:" << endl << meas << endl;
+                }
+                notFoundCount = 0;
             }
+
             ////////////////////////////////////
             /////// Kalman Update Finish ///////
             ////////////////////////////////////
-
         }
 
-        errork1 = errork2;
+        if (count_cal < limit)
+            if (img_test.data) cv::imshow("Video", img_test);
+
+        if(start && (img_out.img.data))  imshow("Video", img_out.img);
 
         count_cal++;
         count_test++;
-
-        if(start)  imshow("Kalman", img_out.img);
-
         ch = char(cv::waitKey(0));
+        errork1 = errork2;
 
     }
 
