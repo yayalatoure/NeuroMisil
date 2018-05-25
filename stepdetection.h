@@ -8,7 +8,7 @@
 #include <iomanip>
 #include <sstream>
 #include <cstring>
-#include <math.h>
+#include <cmath>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
