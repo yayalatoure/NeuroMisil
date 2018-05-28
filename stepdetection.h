@@ -24,7 +24,7 @@ using namespace cv;
 
 typedef struct {
     Mat img;
-    Mat labels;
+    Mat seg;
     bool flag;
     Mat area_filter;
     map<int, Rect> fboxes;

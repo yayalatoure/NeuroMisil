@@ -208,9 +208,12 @@ int main(int argc, char *argv[]){
         }
 
         if (count_cal < limit)
-            if (img_test.data) cv::imshow("Video", img_test);
+            if (img_test.data) cv::imshow("Algoritmo", img_test);
 
-        if(start && (img_out.img.data))  imshow("Video", img_out.img);
+        if(start && (img_out.img.data)){
+            imshow("Algoritmo", img_out.img);
+            // imshow("Segmentación", img_out.seg);
+        }
 
         count_cal++;
         count_test++;
@@ -218,7 +221,6 @@ int main(int argc, char *argv[]){
         errork1 = errork2;
 
     }
-
 
     return 0;
 

@@ -185,6 +185,7 @@ frame_out FindBoxes(Mat img, ofstream &fileout, bool start){
 
     output.flag = true;
     output.img  = img;
+    output.seg  =  fg;
     output.fboxes = fboxes;
 
     return *(&output);
