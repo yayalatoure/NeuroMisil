@@ -172,8 +172,40 @@ frame_out KalmanPredict(cv::KalmanFilter kf, cv::Mat state, frame_out img_out, i
     return img_out;
 }
 
+frame_out KalmanResetAndStep(frame_out img_out, cv::Point center_kalman, cv::Rect predRect, double errork1, bool found){
 
+    double errork2, errorp;
+    cv::Point center_measured;
+    bool ocultamiento;
 
+    ocultamiento = bool(img_out.fboxes.size() == 1);
+
+    if(ocultamiento){
+        center_measured.x = img_out.fboxes[1].x + img_out.fboxes[1].width / 2;
+        center_measured.y = img_out.fboxes[1].y + img_out.fboxes[1].height / 2;
+    }else{
+        center_measured.x = img_out.fboxes[2].x + img_out.fboxes[2].width / 2;
+        center_measured.y = img_out.fboxes[2].y + img_out.fboxes[2].height / 2;
+    }
+
+    errork2 = distance(center_kalman, center_measured);
+
+    if ( abs(errork1) > 1 ){
+        found = false;
+    }
+
+    if(!ocultamiento & found){
+        errorp = (errork2 + errork1)/2;
+        if(errorp < 3)
+            cv::rectangle(img_out.img, predRect, CV_RGB(0,0,255), 2);
+    }
+
+    img_out.found = found;
+    img_out.errork1 = errork2;
+    img_out.center = center_measured;
+
+    return  img_out;
+}
 
 frame_out FindBoxes(Mat img, ofstream &fileout, bool start){
 
@@ -191,7 +223,7 @@ frame_out FindBoxes(Mat img, ofstream &fileout, bool start){
 
     static int frameNumber = 0;
 
-    static frame_out  output;
+    static frame_out output;
 
     static cv::Ptr<cv::BackgroundSubtractorMOG2> mog = cv::createBackgroundSubtractorMOG2(history, varThreshold, true);
     mog->setNMixtures(nmixtures);

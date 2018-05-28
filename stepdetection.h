@@ -27,6 +27,8 @@ typedef struct {
     Mat seg;
     cv::Rect predRect;
     cv::Point center;
+    bool found;
+    double errork1;
     map<int, Rect> fboxes;
 } frame_out ;
 
@@ -38,6 +40,12 @@ void getFeet(Mat fg, map<int, Rect>&bboxes, Mat labels, Mat labels2, map<int, Re
 void getFileInput (ofstream &);
 void KalmanInit(cv::KalmanFilter kf);
 frame_out KalmanPredict(cv::KalmanFilter kf, cv::Mat state, frame_out img_out, int dT);
+
+
+
+frame_out KalmanResetAndStep(frame_out img_out, cv::Point center_kalman, cv::Rect predRect, double errork1, bool found);
+
+
 frame_out FindBoxes(Mat img, ofstream &fileout, bool start);
 
 double distance(cv::Point center_kalman, cv::Point center_measured);

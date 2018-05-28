@@ -50,15 +50,13 @@ int main(int argc, char *argv[]){
     char ch = 0;
     int  dT = 1;
     int notFoundCount = 0;
-    bool ocult;
     bool found = false;
 
     cv::Rect predRect_R;
 
-    cv::Point center_measured_R, center_kalman_R;
-    double errork1 = 0, errork2 = 0, errorp = 0;
+    cv::Point center_kalman_R, center_measured_R;
+    double errork1_R = 0, errork1_L;
 
-    ///// Algoritmo /////
 
     while(ch != 'q' && ch != 'Q'){
 
@@ -82,9 +80,11 @@ int main(int argc, char *argv[]){
             found = true;
         }
 
-        // Obtain feet's rectangles
+        ///// Algoritmo /////
+
         if(img_proc.data) {
 
+            //////// 2D Feet Boxes ////////
             img_out = FindBoxes(img_proc, ofStream, start);
 
             //////// Kalman Prediction ////////
@@ -93,49 +93,24 @@ int main(int argc, char *argv[]){
                 center_kalman_R = img_out.center;
                 predRect_R      = img_out.predRect;
             }
-            ///// Kalman Prediction Finish /////
 
-            //// Logging ////
-            if(start)
-                ofStream << substring << "," << center_kalman_R.x << "," << center_kalman_R.y << ",";
-
-            ////// Kalman Evaluate Reset ///////
-
-            //  Si existe una diferencia muy grande entre el  centro x,y predicho por kalman
-            //  y el centro x,y medido con la segmentacion se reseteara el filtro y se considerara que se obtuvo un paso
-
-            ocult = bool(img_out.fboxes.size() == 1);
-            if(ocult) {
-                center_measured_R.x = img_out.fboxes[1].x + img_out.fboxes[1].width / 2;
-                center_measured_R.y = img_out.fboxes[1].y + img_out.fboxes[1].height / 2;
-            }else{
-                center_measured_R.x = img_out.fboxes[2].x + img_out.fboxes[2].width / 2;
-                center_measured_R.y = img_out.fboxes[2].y + img_out.fboxes[2].height / 2;
-            }
-
-            errork2 = distance(center_kalman_R, center_measured_R);
-
-            if ( abs(errork1) > 1 ){
-                found = false;
-            }
-
-            if(!ocult & found){
-                errorp = (errork2 + errork1)/2;
-                if(errorp < 3)
-                    cv::rectangle(img_out.img, predRect_R, CV_RGB(0,0,255), 2);
-            }
+            ////// Kalman Reset & Step ///////
+            img_out = KalmanResetAndStep(img_out, center_kalman_R, predRect_R, errork1_R, found);
+            found     = img_out.found;
+            errork1_R = img_out.errork1;
+            center_measured_R = img_out.center;
 
             ///// Logging /////
-
-            if(start)
+            if(start){
+                ofStream << substring << "," << center_kalman_R.x << "," << center_kalman_R.y << ",";
                 ofStream << center_measured_R.x << "," << center_measured_R.y << "," << "Rigth" << "\n";
+            }
 
             cout << "Frame actual: " << filenames_test[count_test].substr(pos-digits) << endl;
             cout << "Posicion X predecida: " << state_R.at<float>(0) << endl;
             cout << "Posicion X medida: " << center_measured_R.x << endl;
 
             ////////// Kalman Update //////////
-
             // Cuando no encuentra caja
             if (img_out.fboxes[1].width <= 0){
                 notFoundCount++;
@@ -144,7 +119,7 @@ int main(int argc, char *argv[]){
                 }else
                     kf_R.statePost = state_R;
             }else{
-                // Si se encuemtra una caja, realiza medición
+                // Si se encuentra una caja, realiza medición
                 // Si hay ocultamiento asigna a medida derecha centro de primer cuadro detectado
                 if (img_out.fboxes.size() == 1) {
                     meas_R.at<float>(0) = img_out.fboxes[1].x + float(img_out.fboxes[1].width);
@@ -183,11 +158,8 @@ int main(int argc, char *argv[]){
                 }
                 notFoundCount = 0;
             }
-
-            ////////////////////////////////////
-            /////// Kalman Update Finish ///////
-            ////////////////////////////////////
         }
+
 
         /////// Visualize ///////
 
@@ -202,7 +174,7 @@ int main(int argc, char *argv[]){
         count_cal++;
         count_test++;
         ch = char(cv::waitKey(0));
-        errork1 = errork2;
+
 
     }
 
