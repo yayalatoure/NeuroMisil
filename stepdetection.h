@@ -25,8 +25,8 @@ using namespace cv;
 typedef struct {
     Mat img;
     Mat seg;
-    bool flag;
-    Mat area_filter;
+    cv::Rect predRect;
+    cv::Point center;
     map<int, Rect> fboxes;
 } frame_out ;
 
@@ -37,8 +37,10 @@ void getFeet(Mat fg, map<int, Rect>&bboxes, Mat labels, Mat labels2, map<int, Re
 //// New Functions ////
 void getFileInput (ofstream &);
 void KalmanInit(cv::KalmanFilter kf);
-double distance(cv::Point center_kalman, cv::Point center_measured);
+frame_out KalmanPredict(cv::KalmanFilter kf, cv::Mat state, frame_out img_out, int dT);
 frame_out FindBoxes(Mat img, ofstream &fileout, bool start);
+
+double distance(cv::Point center_kalman, cv::Point center_measured);
 
 //// New Variables ////
 static int Xk0 = 0, Xk1 = 0, Lk1 = 0, Rk1 = 0;

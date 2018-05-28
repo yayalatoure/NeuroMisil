@@ -144,6 +144,37 @@ void KalmanInit(cv::KalmanFilter kf){
 
 }
 
+frame_out KalmanPredict(cv::KalmanFilter kf, cv::Mat state, frame_out img_out, int dT){
+
+    cv::Rect predRect;
+    cv::Point center_kalman;
+
+    kf.transitionMatrix.at<float>(2) = dT;
+    kf.transitionMatrix.at<float>(9) = dT;
+
+    /////// Prediction ///////
+    state = kf.predict();
+
+    ////// Predicted Rect Red //////
+    predRect.width = static_cast<int>(state.at<float>(4));
+    predRect.height = static_cast<int>(state.at<float>(5));
+    predRect.x = static_cast<int>(state.at<float>(0) - state.at<float>(4)/2);
+    predRect.y = static_cast<int>(state.at<float>(1) - state.at<float>(5)/2);
+    cv::rectangle(img_out.img, predRect, CV_RGB(255,0,0), 2);
+    //// Predicted Point ////
+    center_kalman.x = static_cast<int>(state.at<float>(0));
+    center_kalman.y = static_cast<int>(state.at<float>(1));
+    cv::circle(img_out.img, center_kalman, 2, CV_RGB(255,0,0), -1);
+
+    img_out.predRect = predRect;
+    img_out.center   = center_kalman;
+
+    return img_out;
+}
+
+
+
+
 frame_out FindBoxes(Mat img, ofstream &fileout, bool start){
 
     /* Inicializacion */
@@ -183,7 +214,6 @@ frame_out FindBoxes(Mat img, ofstream &fileout, bool start){
 
     frameNumber++;
 
-    output.flag = true;
     output.img  = img;
     output.seg  =  fg;
     output.fboxes = fboxes;

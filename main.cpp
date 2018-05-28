@@ -52,10 +52,10 @@ int main(int argc, char *argv[]){
     int notFoundCount = 0;
     bool ocult;
     bool found = false;
-    cv::Rect predRect;
 
-    // measured center
-    cv::Point center_measured, center_kalman;
+    cv::Rect predRect_R;
+
+    cv::Point center_measured_R, center_kalman_R;
     double errork1 = 0, errork2 = 0, errorp = 0;
 
     ///// Algoritmo /////
@@ -88,34 +88,16 @@ int main(int argc, char *argv[]){
             img_out = FindBoxes(img_proc, ofStream, start);
 
             //////// Kalman Prediction ////////
-            if (found){
-
-                kf_R.transitionMatrix.at<float>(2) = dT;
-                kf_R.transitionMatrix.at<float>(9) = dT;
-
-                // cout << "dT:" << endl << dT << endl;
-
-                /////// Prediction ///////
-                state_R = kf_R.predict();
-
-                ////// Predicted Rect Red //////
-                predRect.width = static_cast<int>(state_R.at<float>(4));
-                predRect.height = static_cast<int>(state_R.at<float>(5));
-                predRect.x = static_cast<int>(state_R.at<float>(0) - state_R.at<float>(4)/2);
-                predRect.y = static_cast<int>(state_R.at<float>(1) - state_R.at<float>(5)/2);
-                cv::rectangle(img_out.img, predRect, CV_RGB(255,0,0), 2);
-                //// Predicted Point ////
-                center_kalman.x = static_cast<int>(state_R.at<float>(0));
-                center_kalman.y = static_cast<int>(state_R.at<float>(1));
-                cv::circle(img_out.img, center_kalman, 2, CV_RGB(255,0,0), -1);
-
-                //// Logging ////
-                if(start)
-                    ofStream << substring << "," << center_kalman.x << "," << center_kalman.y << ",";
-
+            if(found){
+                img_out = KalmanPredict(kf_R, state_R, img_out, dT);
+                center_kalman_R = img_out.center;
+                predRect_R      = img_out.predRect;
             }
             ///// Kalman Prediction Finish /////
 
+            //// Logging ////
+            if(start)
+                ofStream << substring << "," << center_kalman_R.x << "," << center_kalman_R.y << ",";
 
             ////// Kalman Evaluate Reset ///////
 
@@ -124,14 +106,14 @@ int main(int argc, char *argv[]){
 
             ocult = bool(img_out.fboxes.size() == 1);
             if(ocult) {
-                center_measured.x = img_out.fboxes[1].x + img_out.fboxes[1].width / 2;
-                center_measured.y = img_out.fboxes[1].y + img_out.fboxes[1].height / 2;
+                center_measured_R.x = img_out.fboxes[1].x + img_out.fboxes[1].width / 2;
+                center_measured_R.y = img_out.fboxes[1].y + img_out.fboxes[1].height / 2;
             }else{
-                center_measured.x = img_out.fboxes[2].x + img_out.fboxes[2].width / 2;
-                center_measured.y = img_out.fboxes[2].y + img_out.fboxes[2].height / 2;
+                center_measured_R.x = img_out.fboxes[2].x + img_out.fboxes[2].width / 2;
+                center_measured_R.y = img_out.fboxes[2].y + img_out.fboxes[2].height / 2;
             }
 
-            errork2 = distance(center_kalman, center_measured);
+            errork2 = distance(center_kalman_R, center_measured_R);
 
             if ( abs(errork1) > 1 ){
                 found = false;
@@ -140,17 +122,17 @@ int main(int argc, char *argv[]){
             if(!ocult & found){
                 errorp = (errork2 + errork1)/2;
                 if(errorp < 3)
-                    cv::rectangle(img_out.img, predRect, CV_RGB(0,0,255), 2);
+                    cv::rectangle(img_out.img, predRect_R, CV_RGB(0,0,255), 2);
             }
 
             ///// Logging /////
 
             if(start)
-                ofStream << center_measured.x << "," << center_measured.y << "," << "Rigth" << "\n";
+                ofStream << center_measured_R.x << "," << center_measured_R.y << "," << "Rigth" << "\n";
 
             cout << "Frame actual: " << filenames_test[count_test].substr(pos-digits) << endl;
             cout << "Posicion X predecida: " << state_R.at<float>(0) << endl;
-            cout << "Posicion X medida: " << center_measured.x << endl;
+            cout << "Posicion X medida: " << center_measured_R.x << endl;
 
             ////////// Kalman Update //////////
 
@@ -206,6 +188,8 @@ int main(int argc, char *argv[]){
             /////// Kalman Update Finish ///////
             ////////////////////////////////////
         }
+
+        /////// Visualize ///////
 
         if (count_cal < limit)
             if (img_test.data) cv::imshow("Algoritmo", img_test);
