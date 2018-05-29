@@ -26,13 +26,14 @@ int main(int argc, char *argv[]){
 
     // Images Reading
     string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/CALIBRACION01/*.jpg";
-    // std::string path_cal = "/home/lalo/Desktop/Dropbox/Proyecto IPD441/Data/Videos/CALIBRACION01/*.jpg";
     string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/TEST01/*.jpg";
-    // std::string path_cal = "/home/lalo/Desktop/Dropbox/Proyecto IPD441/Data/Videos/TEST01/*.jpg";
+//    std::string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/2_CAMARAS/FEED1/*.jpg";
+//    std::string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/2_CAMARAS/FEED1/*.jpg";
 
     // Flag start detection
     bool start = false;
 
+//    int count_test = 195+145, count_cal = 0, limit = 150-145;
     int count_test = 195+145, count_cal = 0, limit = 150-145;
     vector<String> filenames_cal, filenames_test;
 
@@ -160,7 +161,7 @@ int main(int argc, char *argv[]){
                     kf_R.statePost = state_R;
 
                 }else{
-                    //kf_R.correct(meas_R); // Kalman Correction
+                    kf_R.correct(meas_R); // Kalman Correction
                 }
                 notFoundCount = 0;
             }
@@ -175,7 +176,7 @@ int main(int argc, char *argv[]){
 
         if(start && (img_out.img.data)){
             imshow("Algoritmo", img_out.img);
-            //imshow("Segmentación", img_out.seg);
+            imshow("Segmentación", img_out.seg);
         }
 
         count_cal++;

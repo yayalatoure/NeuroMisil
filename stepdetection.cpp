@@ -268,7 +268,7 @@ frame_out FindBoxes(frame_out img_out, Mat img, ofstream &fileout, bool start){
     Mat fg, labels, labels2, stats, centroids;
 
     double backgroundRatio = 0.7;
-    double learningRate = 0.005;
+    double learningRate = 0.005; ////0.005
     double varThreshold = 80;
     int    nmixtures = 3;
     int    history = 150;
@@ -286,8 +286,8 @@ frame_out FindBoxes(frame_out img_out, Mat img, ofstream &fileout, bool start){
     //// Start Segmentation ////
     mog->apply(img, fg, 2*learningRate);
 
-    cv::dilate(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,5)));
-    cv::erode(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4,6))); //(3,6)
+    cv::dilate(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4,6)));
+    cv::erode(fg, fg, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,5))); ////(4,6)
     cv::connectedComponentsWithStats(fg, labels, stats, centroids, 8, CV_32S);
 
     if(start){
