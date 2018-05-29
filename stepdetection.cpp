@@ -208,9 +208,61 @@ frame_out KalmanResetAndStep(frame_out img_out, cv::Point center_kalman, cv::Rec
     return  img_out;
 }
 
-//frame_out KalmanUpdate(frame_out img_out, )
+frame_out KalmanUpdate(cv::KalmanFilter kf, frame_out img_out, int notFoundCount, cv::Mat state, cv::Mat measure ){
 
-frame_out FindBoxes(Mat img, ofstream &fileout, bool start){
+// Cuando no encuentra caja
+    if (img_out.fboxes[1].width <= 0){
+        notFoundCount++;
+        if( notFoundCount >= 100 ){
+            img_out.found = false;
+        }else
+            kf.statePost = state;
+    }else{
+        // Si se encuentra una caja, realiza medición
+        // Si hay ocultamiento asigna a medida derecha centro de primer cuadro detectado
+        if (img_out.fboxes.size() == 1) {
+            measure.at<float>(0) = img_out.fboxes[1].x + float(img_out.fboxes[1].width);
+            measure.at<float>(1) = img_out.fboxes[1].y + float(img_out.fboxes[1].height) / 2;
+            measure.at<float>(2) = (float) state.at<float>(4);
+            measure.at<float>(3) = (float) state.at<float>(5);
+            // Si no hay ocultamiento adigna a medida derecha centro de segundo cuadro detectado
+        } else {
+            measure.at<float>(0) = img_out.fboxes[2].x + float(img_out.fboxes[2].width) / 2;
+            measure.at<float>(1) = img_out.fboxes[2].y + float(img_out.fboxes[2].height) / 2;
+            measure.at<float>(2) = (float) img_out.fboxes[2].width;
+            measure.at<float>(3) = (float) img_out.fboxes[2].height;
+        }
+
+        if (!img_out.found) { // First detection!
+            // >>>> Initialization
+            kf.errorCovPre.at<float>(0) = 1; // px
+            kf.errorCovPre.at<float>(7) = 1; // px
+            kf.errorCovPre.at<float>(14) = 1;
+            kf.errorCovPre.at<float>(21) = 1;
+            kf.errorCovPre.at<float>(28) = 1; // px
+            kf.errorCovPre.at<float>(35) = 1; // px
+
+            state.at<float>(0) = measure.at<float>(0);
+            state.at<float>(1) = measure.at<float>(1);
+            state.at<float>(2) = 0;
+            state.at<float>(3) = 0;
+            state.at<float>(4) = measure.at<float>(2);
+            state.at<float>(5) = measure.at<float>(3);
+            // <<<< Initialization
+            img_out.found = true;
+            kf.statePost = state;
+
+        }else{
+            kf.correct(measure); // Kalman Correction
+        }
+        notFoundCount = 0;
+    }
+
+    return img_out;
+
+}
+
+frame_out FindBoxes(frame_out img_out, Mat img, ofstream &fileout, bool start){
 
     /* Inicializacion */
     Mat fg, labels, labels2, stats, centroids;
@@ -225,8 +277,6 @@ frame_out FindBoxes(Mat img, ofstream &fileout, bool start){
     map<int, Rect> fboxes;
 
     static int frameNumber = 0;
-
-    static frame_out output;
 
     static cv::Ptr<cv::BackgroundSubtractorMOG2> mog = cv::createBackgroundSubtractorMOG2(history, varThreshold, true);
     mog->setNMixtures(nmixtures);
@@ -249,9 +299,9 @@ frame_out FindBoxes(Mat img, ofstream &fileout, bool start){
 
     frameNumber++;
 
-    output.img  = img;
-    output.seg  =  fg;
-    output.fboxes = fboxes;
+    img_out.img  = img;
+    img_out.seg  =  fg;
+    img_out.fboxes = fboxes;
 
-    return *(&output);
+    return img_out;
 }

@@ -31,7 +31,7 @@ typedef struct {
     cv::Point center;
     cv::Rect predRect;
     map<int, Rect> fboxes;
-} frame_out ;
+} frame_out;
 
 void paintRectangles(Mat &img, map<int, Rect>&bboxes);
 void getBlobs(Mat labls, map<int, Rect>&bboxes);
@@ -42,10 +42,10 @@ void getFileInput (ofstream &);
 void KalmanInit(cv::KalmanFilter kf);
 frame_out KalmanPredict(cv::KalmanFilter kf, cv::Mat state, frame_out img_out, int dT);
 frame_out KalmanResetAndStep(frame_out img_out, cv::Point center_kalman, cv::Rect predRect, double errork1, bool found);
-//frame_out KalmanUpdate();
+frame_out KalmanUpdate(cv::KalmanFilter kf, frame_out img_out, int notFoundCount, cv::Mat state, cv::Mat measure);
 
 
-frame_out FindBoxes(Mat img, ofstream &fileout, bool start);
+frame_out FindBoxes(frame_out img_out, cv::Mat img, ofstream &fileout, bool start);
 
 double distance(cv::Point center_kalman, cv::Point center_measured);
 
@@ -56,6 +56,7 @@ static string flag_direc;
 //// Kalman Variables ////
 static unsigned int type = CV_32F;
 static int stateSize = 6, measSize  = 4, contSize = 0;
+static int notFoundCount = 0;
 
 static cv::KalmanFilter kf_R(stateSize, measSize, contSize, type); // NOLINT
 static cv::Mat state_R(stateSize, 1, type);  // [x,y,v_x,v_y,w,h]  // NOLINT

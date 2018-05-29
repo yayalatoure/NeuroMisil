@@ -49,11 +49,10 @@ int main(int argc, char *argv[]){
 
     char ch = 0;
     int  dT = 1;
-    int notFoundCount = 0;
     bool found = false;
+    img_out.found = false;
 
     cv::Rect predRect_R;
-
     cv::Point center_kalman_R, center_measured_R;
     double errork1_R = 0, errork1_L=0;
 
@@ -77,7 +76,7 @@ int main(int argc, char *argv[]){
             substring = filenames_test[count_test].substr(pos-digits);
             img_proc  = img_test;
             start = true;
-            found = true;
+            img_out.found = true;
         }
 
         ///// Algoritmo /////
@@ -85,14 +84,16 @@ int main(int argc, char *argv[]){
         if(img_proc.data) {
 
             //////// 2D Feet Boxes ////////
-            img_out = FindBoxes(img_proc, ofStream, start);
+            img_out = FindBoxes(img_out, img_proc, ofStream, start);
 
             //////// Kalman Prediction ////////
-            if(found){
+            if(img_out.found){
                 img_out = KalmanPredict(kf_R, state_R, img_out, dT);
+
                 center_kalman_R = img_out.center;
                 predRect_R      = img_out.predRect;
                 state_R         = img_out.state;
+                cout << "State R: " << state_R << endl;
             }
 
             ////// Kalman Reset & Step ///////
@@ -106,12 +107,15 @@ int main(int argc, char *argv[]){
                 ofStream << substring << "," << center_kalman_R.x << "," << center_kalman_R.y << ",";
                 ofStream << center_measured_R.x << "," << center_measured_R.y << "," << "Rigth" << "\n";
             }
+//
+//            cout << "Frame actual: " << filenames_test[count_test].substr(pos-digits) << endl;
+//            cout << "Posicion X predecida: " << state_R.at<float>(0) << endl;
+//            cout << "Posicion X medida: " << center_measured_R.x << endl;
 
-            cout << "Frame actual: " << filenames_test[count_test].substr(pos-digits) << endl;
-            cout << "Posicion X predecida: " << state_R.at<float>(0) << endl;
-            cout << "Posicion X medida: " << center_measured_R.x << endl;
 
             ////////// Kalman Update //////////
+            //img_out = KalmanUpdate(kf_R, img_out, notFoundCount, state_R, meas_R);
+
 
             // Cuando no encuentra caja
             if (img_out.fboxes[1].width <= 0){
@@ -156,10 +160,11 @@ int main(int argc, char *argv[]){
                     kf_R.statePost = state_R;
 
                 }else{
-                    kf_R.correct(meas_R); // Kalman Correction
+                    //kf_R.correct(meas_R); // Kalman Correction
                 }
                 notFoundCount = 0;
             }
+
         }
 
 
@@ -170,7 +175,7 @@ int main(int argc, char *argv[]){
 
         if(start && (img_out.img.data)){
             imshow("Algoritmo", img_out.img);
-            // imshow("Segmentación", img_out.seg);
+            //imshow("Segmentación", img_out.seg);
         }
 
         count_cal++;
