@@ -168,6 +168,7 @@ frame_out KalmanPredict(cv::KalmanFilter kf, cv::Mat state, frame_out img_out, i
 
     img_out.predRect = predRect;
     img_out.center   = center_kalman;
+    img_out.state    = state;
 
     return img_out;
 }
@@ -206,6 +207,8 @@ frame_out KalmanResetAndStep(frame_out img_out, cv::Point center_kalman, cv::Rec
 
     return  img_out;
 }
+
+//frame_out KalmanUpdate(frame_out img_out, )
 
 frame_out FindBoxes(Mat img, ofstream &fileout, bool start){
 

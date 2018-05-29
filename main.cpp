@@ -55,7 +55,7 @@ int main(int argc, char *argv[]){
     cv::Rect predRect_R;
 
     cv::Point center_kalman_R, center_measured_R;
-    double errork1_R = 0, errork1_L;
+    double errork1_R = 0, errork1_L=0;
 
 
     while(ch != 'q' && ch != 'Q'){
@@ -92,6 +92,7 @@ int main(int argc, char *argv[]){
                 img_out = KalmanPredict(kf_R, state_R, img_out, dT);
                 center_kalman_R = img_out.center;
                 predRect_R      = img_out.predRect;
+                state_R         = img_out.state;
             }
 
             ////// Kalman Reset & Step ///////
@@ -111,6 +112,7 @@ int main(int argc, char *argv[]){
             cout << "Posicion X medida: " << center_measured_R.x << endl;
 
             ////////// Kalman Update //////////
+
             // Cuando no encuentra caja
             if (img_out.fboxes[1].width <= 0){
                 notFoundCount++;

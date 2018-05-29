@@ -23,12 +23,13 @@ using namespace std;
 using namespace cv;
 
 typedef struct {
-    Mat img;
-    Mat seg;
-    cv::Rect predRect;
-    cv::Point center;
     bool found;
     double errork1;
+    cv::Mat img;
+    cv::Mat seg;
+    cv::Mat state;
+    cv::Point center;
+    cv::Rect predRect;
     map<int, Rect> fboxes;
 } frame_out ;
 
@@ -40,10 +41,8 @@ void getFeet(Mat fg, map<int, Rect>&bboxes, Mat labels, Mat labels2, map<int, Re
 void getFileInput (ofstream &);
 void KalmanInit(cv::KalmanFilter kf);
 frame_out KalmanPredict(cv::KalmanFilter kf, cv::Mat state, frame_out img_out, int dT);
-
-
-
 frame_out KalmanResetAndStep(frame_out img_out, cv::Point center_kalman, cv::Rect predRect, double errork1, bool found);
+//frame_out KalmanUpdate();
 
 
 frame_out FindBoxes(Mat img, ofstream &fileout, bool start);
