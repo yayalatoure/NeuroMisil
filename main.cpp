@@ -52,17 +52,11 @@ int main(int argc, char *argv[]){
     bool found = false;
     img_out.found = false;
 
-    cv::Rect predRect_R;
-    cv::Point center_kalman_R, center_measured_R;
+
     double errork1_R = 0, errork1_L=0;
 
 
     while(ch != 'q' && ch != 'Q'){
-
-        //double ticks = 0;
-        //double precTick = ticks;
-        //ticks = (double) cv::getTickCount();
-        //double dT = (ticks - precTick) / cv::getTickFrequency(); //seconds
 
         ////////// Frame Acquisition /////////
         if (count_cal < limit){
@@ -88,30 +82,20 @@ int main(int argc, char *argv[]){
 
             //////// Kalman Prediction ////////
             if(img_out.found){
-                img_out = KalmanPredict(kf_R, state_R, img_out, dT);
-
-                center_kalman_R = img_out.center;
-                predRect_R      = img_out.predRect;
-                state_R         = img_out.state;
-                cout << "State R: " << state_R << endl;
+                KalmanPredict(&img_out, *(&kf_R), state_R, &predRect_R, &center_kalman_R, dT);
             }
 
             ////// Kalman Reset & Step ///////
-            img_out = KalmanResetAndStep(img_out, center_kalman_R, predRect_R, errork1_R, found);
-            found     = img_out.found;
-            errork1_R = img_out.errork1;
-            center_measured_R = img_out.center;
+            KalmanResetAndStep(&img_out, &center_kalman_R, &center_measured_R, &predRect_R, &errork1_R, &found);
 
             ///// Logging /////
             if(start){
                 ofStream << substring << "," << center_kalman_R.x << "," << center_kalman_R.y << ",";
                 ofStream << center_measured_R.x << "," << center_measured_R.y << "," << "Rigth" << "\n";
             }
-//
 //            cout << "Frame actual: " << filenames_test[count_test].substr(pos-digits) << endl;
 //            cout << "Posicion X predecida: " << state_R.at<float>(0) << endl;
 //            cout << "Posicion X medida: " << center_measured_R.x << endl;
-
 
             ////////// Kalman Update //////////
 //            img_out = KalmanUpdate(*kf_Rp, img_out, notFoundCount, state_R);

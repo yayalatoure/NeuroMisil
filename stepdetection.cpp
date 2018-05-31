@@ -48,7 +48,6 @@ void getFeet(cv::Mat fg, std::map<int, cv::Rect> &bboxes, cv::Mat labels, cv::Ma
     string Direccion;
 
     getBlobs(labels, bboxes);
-//    malloc();
 
     for(unsigned int j=0; j < bboxes.size(); j++){
         if(bboxes[j].area() >= bboxes[biggestblob].area()) biggestblob = j;
@@ -73,12 +72,9 @@ void getFeet(cv::Mat fg, std::map<int, cv::Rect> &bboxes, cv::Mat labels, cv::Ma
         Direccion = (Direc < 0) ? "Left" : "Rigth" ;
     }
 
-
-    cout << "\n Dirección: " <<  Direccion << endl;
+//    cout << "\n Dirección: " <<  Direccion << endl;
     flag_direc = Direccion;
 
-
-    //
     Mat mask = Mat::zeros(fg.size(), CV_8U);
     rectangle(mask, ROI, Scalar(255), CV_FILLED);
     Mat fgROI = Mat::zeros(fg.size(), CV_8U);
@@ -89,14 +85,6 @@ void getFeet(cv::Mat fg, std::map<int, cv::Rect> &bboxes, cv::Mat labels, cv::Ma
     cv::connectedComponents(fgROI, labels2, 8, CV_32S);
     getBlobs(labels2, fboxes);
 
-}
-
-double distance(cv::Point center_kalman, cv::Point center_measured){
-    double dx = 0, dy = 0, result=0;
-    dx = pow((center_kalman.x - center_measured.x), 2);
-    dy = pow((center_kalman.y - center_measured.y), 2);
-    result = dx; // + dy; //sqrt(dx + dy);
-    return result;
 }
 
 void KalmanInit(cv::KalmanFilter kf){
@@ -142,10 +130,7 @@ void KalmanInit(cv::KalmanFilter kf){
 
 }
 
-frame_out KalmanPredict(cv::KalmanFilter kf, cv::Mat state, frame_out img_out, int dT){
-
-    cv::Rect predRect;
-    cv::Point center_kalman;
+void KalmanPredict(frame_out *img_out, cv::KalmanFilter kf, cv::Mat state, cv::Rect *predRect, cv::Point *center_kalman, int dT){
 
     kf.transitionMatrix.at<float>(2) = dT;
     kf.transitionMatrix.at<float>(9) = dT;
@@ -154,57 +139,71 @@ frame_out KalmanPredict(cv::KalmanFilter kf, cv::Mat state, frame_out img_out, i
     state = kf.predict();
 
     ////// Predicted Rect Red //////
-    predRect.width = static_cast<int>(state.at<float>(4));
-    predRect.height = static_cast<int>(state.at<float>(5));
-    predRect.x = static_cast<int>(state.at<float>(0) - state.at<float>(4)/2);
-    predRect.y = static_cast<int>(state.at<float>(1) - state.at<float>(5)/2);
-    cv::rectangle(img_out.img, predRect, CV_RGB(255,0,0), 2);
+    (*predRect).width = static_cast<int>(state.at<float>(4));
+    (*predRect).height = static_cast<int>(state.at<float>(5));
+    (*predRect).x = static_cast<int>(state.at<float>(0) - state.at<float>(4)/2);
+    (*predRect).y = static_cast<int>(state.at<float>(1) - state.at<float>(5)/2);
+    cv::rectangle((*img_out).img, *predRect, CV_RGB(255,0,0), 2);
     //// Predicted Point ////
-    center_kalman.x = static_cast<int>(state.at<float>(0));
-    center_kalman.y = static_cast<int>(state.at<float>(1));
-    cv::circle(img_out.img, center_kalman, 2, CV_RGB(255,0,0), -1);
+    (*center_kalman).x = static_cast<int>(state.at<float>(0));
+    (*center_kalman).y = static_cast<int>(state.at<float>(1));
+    cv::circle((*img_out).img, *center_kalman, 2, CV_RGB(255,0,0), -1);
 
-    img_out.predRect = predRect;
-    img_out.center   = center_kalman;
-    img_out.state    = state;
-
-    return img_out;
 }
 
-frame_out KalmanResetAndStep(frame_out img_out, cv::Point center_kalman, cv::Rect predRect, double errork1, bool found){
+
+
+
+
+
+void KalmanResetAndStep(frame_out *img_out, cv::Point *center_kalman, cv::Point *center_measured, cv::Rect *predRect, double *errork1, bool *found){
 
     double errork2, errorp;
-    cv::Point center_measured;
+//    cv::Point center_measured;
     bool ocultamiento;
 
-    ocultamiento = bool(img_out.fboxes.size() == 1);
+    ocultamiento = bool((*img_out).fboxes.size() == 1);
 
     if(ocultamiento){
-        center_measured.x = img_out.fboxes[1].x + img_out.fboxes[1].width / 2;
-        center_measured.y = img_out.fboxes[1].y + img_out.fboxes[1].height / 2;
+        (*center_measured).x = (*img_out).fboxes[1].x + (*img_out).fboxes[1].width / 2;
+        (*center_measured).y = (*img_out).fboxes[1].y + (*img_out).fboxes[1].height / 2;
     }else{
-        center_measured.x = img_out.fboxes[2].x + img_out.fboxes[2].width / 2;
-        center_measured.y = img_out.fboxes[2].y + img_out.fboxes[2].height / 2;
+        (*center_measured).x = (*img_out).fboxes[2].x + (*img_out).fboxes[2].width / 2;
+        (*center_measured).y = (*img_out).fboxes[2].y + (*img_out).fboxes[2].height / 2;
     }
 
-    errork2 = distance(center_kalman, center_measured);
+    errork2 = distance(&(*center_kalman), &(*center_measured));
 
-    if ( abs(errork1) > 1 ){
-        found = false;
+    if ( abs(*errork1) > 1 ){
+        *found = false;
     }
 
-    if(!ocultamiento & found){
-        errorp = (errork2 + errork1)/2;
+    if(!ocultamiento & (*found)){
+        errorp = (errork2 + (*errork1))/2;
         if(errorp < 3)
-            cv::rectangle(img_out.img, predRect, CV_RGB(0,0,255), 2);
+            cv::rectangle((*img_out).img, *predRect, CV_RGB(0,0,255), 2);
     }
 
-    img_out.found = found;
-    img_out.errork1 = errork2;
-    img_out.center = center_measured;
 
-    return  img_out;
+    *errork1 = errork2;
+
+
 }
+
+
+double distance(cv::Point *center_kalman, cv::Point *center_measured){
+    double dx = 0, dy = 0, result=0;
+    dx = pow(((*center_kalman).x - (*center_measured).x), 2);
+    dy = pow(((*center_kalman).y - (*center_measured).y), 2);
+    result = dx; // + dy; //sqrt(dx + dy);
+    return result;
+}
+
+
+
+
+
+
 
 frame_out KalmanUpdate(cv::KalmanFilter &kf, frame_out img_out, int notFoundCount, cv::Mat state){
 
