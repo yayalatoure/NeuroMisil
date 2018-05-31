@@ -1,3 +1,3 @@
-/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/NeuroMisil.dir
+/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/NeuroMisil.dir

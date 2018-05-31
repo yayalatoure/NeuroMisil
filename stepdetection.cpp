@@ -101,8 +101,6 @@ double distance(cv::Point center_kalman, cv::Point center_measured){
 
 void KalmanInit(cv::KalmanFilter kf){
 
-    // Kalman Filter Init
-
     // Transition State Matrix A
     // Note: set dT at each processing step!
     // [ 1 0 dT 0  0 0 ]
@@ -208,7 +206,9 @@ frame_out KalmanResetAndStep(frame_out img_out, cv::Point center_kalman, cv::Rec
     return  img_out;
 }
 
-frame_out KalmanUpdate(cv::KalmanFilter kf, frame_out img_out, int notFoundCount, cv::Mat state, cv::Mat measure ){
+frame_out KalmanUpdate(cv::KalmanFilter &kf, frame_out img_out, int notFoundCount, cv::Mat state){
+
+    cv::Mat measure(measSize, 1, type);    // [z_x,z_y,z_w,z_h]  // NOLINT
 
 // Cuando no encuentra caja
     if (img_out.fboxes[1].width <= 0){
@@ -258,11 +258,15 @@ frame_out KalmanUpdate(cv::KalmanFilter kf, frame_out img_out, int notFoundCount
         notFoundCount = 0;
     }
 
+    img_out.state   = state;
+    img_out.measure = measure;
+
+
     return img_out;
 
 }
 
-frame_out FindBoxes(frame_out img_out, Mat img, ofstream &fileout, bool start){
+void FindBoxes(frame_out *img_out, Mat img, bool start){
 
     /* Inicializacion */
     Mat fg, labels, labels2, stats, centroids;
@@ -299,9 +303,9 @@ frame_out FindBoxes(frame_out img_out, Mat img, ofstream &fileout, bool start){
 
     frameNumber++;
 
-    img_out.img  = img;
-    img_out.seg  =  fg;
-    img_out.fboxes = fboxes;
+    (*img_out).img  = img;
+    (*img_out).seg  =  fg;
+    (*img_out).fboxes = fboxes;
 
-    return img_out;
+
 }

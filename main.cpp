@@ -18,11 +18,10 @@ using namespace cv;
 
 int main(int argc, char *argv[]){
 
-    //// Kalmar Init ////
-    KalmanInit(kf_R);
-
     cv::Mat img_cal, img_test, img_proc, labels, labels2;
-    frame_out img_out = frame_out();
+
+    //// Kalmar Init ////
+    KalmanInit(*(&kf_R));
 
     // Images Reading
     string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/CALIBRACION01/*.jpg";
@@ -85,7 +84,7 @@ int main(int argc, char *argv[]){
         if(img_proc.data) {
 
             //////// 2D Feet Boxes ////////
-            img_out = FindBoxes(img_out, img_proc, ofStream, start);
+            FindBoxes(&img_out, img_proc, start);
 
             //////// Kalman Prediction ////////
             if(img_out.found){
@@ -115,7 +114,9 @@ int main(int argc, char *argv[]){
 
 
             ////////// Kalman Update //////////
-            //img_out = KalmanUpdate(kf_R, img_out, notFoundCount, state_R, meas_R);
+//            img_out = KalmanUpdate(*kf_Rp, img_out, notFoundCount, state_R);
+//            state_R = img_out.state;
+//            meas_R  = img_out.measure;
 
 
             // Cuando no encuentra caja
@@ -167,7 +168,6 @@ int main(int argc, char *argv[]){
             }
 
         }
-
 
         /////// Visualize ///////
 
