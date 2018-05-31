@@ -151,11 +151,6 @@ void KalmanPredict(frame_out *img_out, cv::KalmanFilter kf, cv::Mat state, cv::R
 
 }
 
-
-
-
-
-
 void KalmanResetAndStep(frame_out *img_out, cv::Point *center_kalman, cv::Point *center_measured, cv::Rect *predRect, double *errork1, bool *found){
 
     double errork2, errorp;
@@ -184,12 +179,9 @@ void KalmanResetAndStep(frame_out *img_out, cv::Point *center_kalman, cv::Point 
             cv::rectangle((*img_out).img, *predRect, CV_RGB(0,0,255), 2);
     }
 
-
     *errork1 = errork2;
 
-
 }
-
 
 double distance(cv::Point *center_kalman, cv::Point *center_measured){
     double dx = 0, dy = 0, result=0;
@@ -199,40 +191,38 @@ double distance(cv::Point *center_kalman, cv::Point *center_measured){
     return result;
 }
 
+void KalmanUpdate(frame_out *img_out, cv::KalmanFilter kf, int *notFoundCount, cv::Mat *state, cv::Mat *measure, bool *found){
 
-
-
-
-
-
-frame_out KalmanUpdate(cv::KalmanFilter &kf, frame_out img_out, int notFoundCount, cv::Mat state){
-
-    cv::Mat measure(measSize, 1, type);    // [z_x,z_y,z_w,z_h]  // NOLINT
-
-// Cuando no encuentra caja
-    if (img_out.fboxes[1].width <= 0){
-        notFoundCount++;
-        if( notFoundCount >= 100 ){
-            img_out.found = false;
-        }else
-            kf.statePost = state;
+    // Cuando no encuentra caja
+    if ((*img_out).fboxes[1].width <= 0){
+        (*notFoundCount)++;
+        if( (*notFoundCount) >= 100 ){
+            *found = false;
+        }else{
+            kf.statePost.at<float>(0) = (*state).at<float>(0);
+            kf.statePost.at<float>(1) = (*state).at<float>(1);
+            kf.statePost.at<float>(2) = (*state).at<float>(2);
+            kf.statePost.at<float>(3) = (*state).at<float>(3);
+            kf.statePost.at<float>(4) = (*state).at<float>(4);
+            kf.statePost.at<float>(5) = (*state).at<float>(5);
+        }
     }else{
         // Si se encuentra una caja, realiza medición
         // Si hay ocultamiento asigna a medida derecha centro de primer cuadro detectado
-        if (img_out.fboxes.size() == 1) {
-            measure.at<float>(0) = img_out.fboxes[1].x + float(img_out.fboxes[1].width);
-            measure.at<float>(1) = img_out.fboxes[1].y + float(img_out.fboxes[1].height) / 2;
-            measure.at<float>(2) = (float) state.at<float>(4);
-            measure.at<float>(3) = (float) state.at<float>(5);
+        if ((*img_out).fboxes.size() == 1) {
+            (*measure).at<float>(0) = (*img_out).fboxes[1].x + float((*img_out).fboxes[1].width);
+            (*measure).at<float>(1) = (*img_out).fboxes[1].y + float((*img_out).fboxes[1].height) / 2;
+            (*measure).at<float>(2) = (float) (*state).at<float>(4);
+            (*measure).at<float>(3) = (float) (*state).at<float>(5);
             // Si no hay ocultamiento adigna a medida derecha centro de segundo cuadro detectado
         } else {
-            measure.at<float>(0) = img_out.fboxes[2].x + float(img_out.fboxes[2].width) / 2;
-            measure.at<float>(1) = img_out.fboxes[2].y + float(img_out.fboxes[2].height) / 2;
-            measure.at<float>(2) = (float) img_out.fboxes[2].width;
-            measure.at<float>(3) = (float) img_out.fboxes[2].height;
+            (*measure).at<float>(0) = (*img_out).fboxes[2].x + float((*img_out).fboxes[2].width) / 2;
+            (*measure).at<float>(1) = (*img_out).fboxes[2].y + float((*img_out).fboxes[2].height) / 2;
+            (*measure).at<float>(2) = (float) (*img_out).fboxes[2].width;
+            (*measure).at<float>(3) = (float) (*img_out).fboxes[2].height;
         }
 
-        if (!img_out.found) { // First detection!
+        if (!(*found)){ // First detection!
             // >>>> Initialization
             kf.errorCovPre.at<float>(0) = 1; // px
             kf.errorCovPre.at<float>(7) = 1; // px
@@ -241,31 +231,32 @@ frame_out KalmanUpdate(cv::KalmanFilter &kf, frame_out img_out, int notFoundCoun
             kf.errorCovPre.at<float>(28) = 1; // px
             kf.errorCovPre.at<float>(35) = 1; // px
 
-            state.at<float>(0) = measure.at<float>(0);
-            state.at<float>(1) = measure.at<float>(1);
-            state.at<float>(2) = 0;
-            state.at<float>(3) = 0;
-            state.at<float>(4) = measure.at<float>(2);
-            state.at<float>(5) = measure.at<float>(3);
+            (*state).at<float>(0) = (*measure).at<float>(0);
+            (*state).at<float>(1) = (*measure).at<float>(1);
+            (*state).at<float>(2) = 0;
+            (*state).at<float>(3) = 0;
+            (*state).at<float>(4) = (*measure).at<float>(2);
+            (*state).at<float>(5) = (*measure).at<float>(3);
             // <<<< Initialization
-            img_out.found = true;
-            kf.statePost = state;
+
+            kf.statePost.at<float>(0) = (*state).at<float>(0);
+            kf.statePost.at<float>(1) = (*state).at<float>(1);
+            kf.statePost.at<float>(2) = (*state).at<float>(2);
+            kf.statePost.at<float>(3) = (*state).at<float>(3);
+            kf.statePost.at<float>(4) = (*state).at<float>(4);
+            kf.statePost.at<float>(5) = (*state).at<float>(5);
+
+            *found = true;
 
         }else{
-            kf.correct(measure); // Kalman Correction
+            kf.correct(*measure); // Kalman Correction
         }
-        notFoundCount = 0;
+        *notFoundCount = 0;
     }
-
-    img_out.state   = state;
-    img_out.measure = measure;
-
-
-    return img_out;
 
 }
 
-void FindBoxes(frame_out *img_out, Mat img, bool start){
+void FindBoxes(frame_out *img_out, Mat img, bool start, bool *found){
 
     /* Inicializacion */
     Mat fg, labels, labels2, stats, centroids;
@@ -302,9 +293,14 @@ void FindBoxes(frame_out *img_out, Mat img, bool start){
 
     frameNumber++;
 
+    if (fboxes[1].width > 0){
+        *found = true;
+    }else{
+        *found = false;
+    }
+
     (*img_out).img  = img;
     (*img_out).seg  =  fg;
     (*img_out).fboxes = fboxes;
-
 
 }

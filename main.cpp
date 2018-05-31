@@ -50,8 +50,6 @@ int main(int argc, char *argv[]){
     char ch = 0;
     int  dT = 1;
     bool found = false;
-    img_out.found = false;
-
 
     double errork1_R = 0, errork1_L=0;
 
@@ -70,7 +68,7 @@ int main(int argc, char *argv[]){
             substring = filenames_test[count_test].substr(pos-digits);
             img_proc  = img_test;
             start = true;
-            img_out.found = true;
+//            found = true;
         }
 
         ///// Algoritmo /////
@@ -78,10 +76,11 @@ int main(int argc, char *argv[]){
         if(img_proc.data) {
 
             //////// 2D Feet Boxes ////////
-            FindBoxes(&img_out, img_proc, start);
+            FindBoxes(&img_out, img_proc, start, &found);
+
 
             //////// Kalman Prediction ////////
-            if(img_out.found){
+            if(found){
                 KalmanPredict(&img_out, *(&kf_R), state_R, &predRect_R, &center_kalman_R, dT);
             }
 
@@ -98,58 +97,58 @@ int main(int argc, char *argv[]){
 //            cout << "Posicion X medida: " << center_measured_R.x << endl;
 
             ////////// Kalman Update //////////
-//            img_out = KalmanUpdate(*kf_Rp, img_out, notFoundCount, state_R);
-//            state_R = img_out.state;
-//            meas_R  = img_out.measure;
+            KalmanUpdate(&img_out, *(&kf_R), &notFoundCount, &state_R, &meas_R, &found);
+            cout << kf_R.statePost << endl;
+
 
 
             // Cuando no encuentra caja
-            if (img_out.fboxes[1].width <= 0){
-                notFoundCount++;
-                if( notFoundCount >= 100 ){
-                    found = false;
-                }else
-                    kf_R.statePost = state_R;
-            }else{
-                // Si se encuentra una caja, realiza medición
-                // Si hay ocultamiento asigna a medida derecha centro de primer cuadro detectado
-                if (img_out.fboxes.size() == 1) {
-                    meas_R.at<float>(0) = img_out.fboxes[1].x + float(img_out.fboxes[1].width);
-                    meas_R.at<float>(1) = img_out.fboxes[1].y + float(img_out.fboxes[1].height) / 2;
-                    meas_R.at<float>(2) = (float) state_R.at<float>(4);
-                    meas_R.at<float>(3) = (float) state_R.at<float>(5);
-                // Si no hay ocultamiento adigna a medida derecha centro de segundo cuadro detectado
-                } else {
-                    meas_R.at<float>(0) = img_out.fboxes[2].x + float(img_out.fboxes[2].width) / 2;
-                    meas_R.at<float>(1) = img_out.fboxes[2].y + float(img_out.fboxes[2].height) / 2;
-                    meas_R.at<float>(2) = (float) img_out.fboxes[2].width;
-                    meas_R.at<float>(3) = (float) img_out.fboxes[2].height;
-                }
-
-                if (!found) { // First detection!
-                    // >>>> Initialization
-                    kf_R.errorCovPre.at<float>(0) = 1; // px
-                    kf_R.errorCovPre.at<float>(7) = 1; // px
-                    kf_R.errorCovPre.at<float>(14) = 1;
-                    kf_R.errorCovPre.at<float>(21) = 1;
-                    kf_R.errorCovPre.at<float>(28) = 1; // px
-                    kf_R.errorCovPre.at<float>(35) = 1; // px
-
-                    state_R.at<float>(0) = meas_R.at<float>(0);
-                    state_R.at<float>(1) = meas_R.at<float>(1);
-                    state_R.at<float>(2) = 0;
-                    state_R.at<float>(3) = 0;
-                    state_R.at<float>(4) = meas_R.at<float>(2);
-                    state_R.at<float>(5) = meas_R.at<float>(3);
-                    // <<<< Initialization
-                    found = true;
-                    kf_R.statePost = state_R;
-
-                }else{
-                    kf_R.correct(meas_R); // Kalman Correction
-                }
-                notFoundCount = 0;
-            }
+//            if (img_out.fboxes[1].width <= 0){
+//                notFoundCount++;
+//                if( notFoundCount >= 100 ){
+//                    found = false;
+//                }else
+//                    kf_R.statePost = state_R;
+//            }else{
+//                // Si se encuentra una caja, realiza medición
+//                // Si hay ocultamiento asigna a medida derecha centro de primer cuadro detectado
+//                if (img_out.fboxes.size() == 1) {
+//                    meas_R.at<float>(0) = img_out.fboxes[1].x + float(img_out.fboxes[1].width);
+//                    meas_R.at<float>(1) = img_out.fboxes[1].y + float(img_out.fboxes[1].height) / 2;
+//                    meas_R.at<float>(2) = (float) state_R.at<float>(4);
+//                    meas_R.at<float>(3) = (float) state_R.at<float>(5);
+//                // Si no hay ocultamiento adigna a medida derecha centro de segundo cuadro detectado
+//                } else {
+//                    meas_R.at<float>(0) = img_out.fboxes[2].x + float(img_out.fboxes[2].width) / 2;
+//                    meas_R.at<float>(1) = img_out.fboxes[2].y + float(img_out.fboxes[2].height) / 2;
+//                    meas_R.at<float>(2) = (float) img_out.fboxes[2].width;
+//                    meas_R.at<float>(3) = (float) img_out.fboxes[2].height;
+//                }
+//
+//                if (!found) { // First detection!
+//                    // >>>> Initialization
+//                    kf_R.errorCovPre.at<float>(0) = 1; // px
+//                    kf_R.errorCovPre.at<float>(7) = 1; // px
+//                    kf_R.errorCovPre.at<float>(14) = 1;
+//                    kf_R.errorCovPre.at<float>(21) = 1;
+//                    kf_R.errorCovPre.at<float>(28) = 1; // px
+//                    kf_R.errorCovPre.at<float>(35) = 1; // px
+//
+//                    state_R.at<float>(0) = meas_R.at<float>(0);
+//                    state_R.at<float>(1) = meas_R.at<float>(1);
+//                    state_R.at<float>(2) = 0;
+//                    state_R.at<float>(3) = 0;
+//                    state_R.at<float>(4) = meas_R.at<float>(2);
+//                    state_R.at<float>(5) = meas_R.at<float>(3);
+//                    // <<<< Initialization
+//                    found = true;
+//                    kf_R.statePost = state_R;
+//
+//                }else{
+//                    kf_R.correct(meas_R); // Kalman Correction
+//                }
+//                notFoundCount = 0;
+//            }
 
         }
 
@@ -160,7 +159,7 @@ int main(int argc, char *argv[]){
 
         if(start && (img_out.img.data)){
             imshow("Algoritmo", img_out.img);
-            imshow("Segmentación", img_out.seg);
+//            imshow("Segmentación", img_out.seg);
         }
 
         count_cal++;

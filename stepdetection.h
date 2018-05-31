@@ -36,25 +36,29 @@ typedef struct {
 
 static frame_out img_out = frame_out();
 
-void paintRectangles(Mat &img, map<int, Rect>&bboxes);
+void paintRectangles(Mat &img, map<int, Rect> &bboxes);
 void getBlobs(Mat labls, map<int, Rect>&bboxes);
-void getFeet(Mat fg, map<int, Rect>&bboxes, Mat labels, Mat labels2, map<int, Rect>&fboxes);
+void getFeet(Mat fg, map<int, Rect> &bboxes, Mat labels, Mat labels2, map<int, Rect> &fboxes);
 
 //// New Functions ////
 void getFileInput (ofstream &);
 void KalmanInit(cv::KalmanFilter kf);
 void KalmanPredict(frame_out *img_out, cv::KalmanFilter kf, cv::Mat state, cv::Rect *predRect, cv::Point *center_kalman, int dT);
-
-
 void KalmanResetAndStep(frame_out *img_out, cv::Point *center_kalman, cv::Point *center_measured, cv::Rect *predRect, double *errork1, bool *found);
 
 
 
 
 
+void KalmanUpdate(frame_out *img_out, cv::KalmanFilter kf, int *notFoundCount, cv::Mat *state, cv::Mat *measure, bool *found);
 
-frame_out KalmanUpdate(cv::KalmanFilter &kf, frame_out img_out, int notFoundCount, cv::Mat state);
-void FindBoxes(frame_out *img_out, cv::Mat img, bool start);
+
+
+
+
+
+
+void FindBoxes(frame_out *img_out, cv::Mat img, bool start, bool *found);
 double distance(cv::Point *center_kalman, cv::Point *center_measured);
 
 //// New Variables ////
