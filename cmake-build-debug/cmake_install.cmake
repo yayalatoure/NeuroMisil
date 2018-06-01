@@ -1,4 +1,4 @@
-# Install script for directory: /home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil
+# Install script for directory: /home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

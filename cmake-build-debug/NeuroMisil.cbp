@@ -5,41 +5,41 @@
 		<Option title="NeuroMisil"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\..\usr\local\;CMake Files\..\..\..\..\..\..\..\usr\local\share\;CMake Files\..\..\..\..\..\..\..\usr\local\share\OpenCV\;CMake Files\..\..\..\..\..\..\..\usr\lib\;CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\;CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\;CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Widgets\;CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Gui\;CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\usr\local\;CMake Files\..\..\..\..\..\..\usr\local\share\;CMake Files\..\..\..\..\..\..\usr\local\share\OpenCV\;CMake Files\..\..\..\..\..\..\usr\lib\;CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\;CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\;CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Widgets\;CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Gui\;CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"/>
+				<Option working_dir="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"/>
+				<Option working_dir="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"/>
+				<Option working_dir="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="NeuroMisil">
-				<Option output="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/NeuroMisil" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"/>
+				<Option output="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/NeuroMisil" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -63,15 +63,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 NeuroMisil"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 NeuroMisil"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="NeuroMisil/fast">
-				<Option output="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/NeuroMisil" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"/>
+				<Option output="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/NeuroMisil" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -95,75 +95,75 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 NeuroMisil/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lalo/Desktop/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 NeuroMisil/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lalo/Dropbox/Proyecto\ IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Paltas.cpp">
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Paltas.cpp">
 			<Option target="NeuroMisil"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/main.cpp">
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/main.cpp">
 			<Option target="NeuroMisil"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.cpp">
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.cpp">
 			<Option target="NeuroMisil"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.h">
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.h">
 			<Option target="NeuroMisil"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/CMakeLists.txt">
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/local/share/OpenCV/OpenCVConfig-version.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/local/share/OpenCV/OpenCVConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/local/share/OpenCV/OpenCVConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/local/share/OpenCV/OpenCVConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/local/share/OpenCV/OpenCVModules-release.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/local/share/OpenCV/OpenCVModules-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/local/share/OpenCV/OpenCVModules.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/local/share/OpenCV/OpenCVModules.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Widgets\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Widgets\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Widgets\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Widgets\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Widgets\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Widgets\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Widgets\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Widgets\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Gui/Qt5GuiConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Gui\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Gui\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Gui\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Gui\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Gui\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Gui\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Core/Qt5CoreConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Core/Qt5CoreConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\"/>
 		</Unit>
-		<Unit filename="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Core/Qt5CoreMacros.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\"/>
+		<Unit filename="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/../../../../../../usr/lib/x86_64-linux-gnu/cmake/Qt5Core/Qt5CoreMacros.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Qt5Core\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

@@ -43,10 +43,10 @@ RM = /opt/clion-2018.1/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil"
+CMAKE_SOURCE_DIR = "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"
+CMAKE_BINARY_DIR = "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug"
 
 # Include any dependencies generated for this target.
 include CMakeFiles/NeuroMisil.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/NeuroMisil.dir/flags.make
 
 CMakeFiles/NeuroMisil.dir/main.cpp.o: CMakeFiles/NeuroMisil.dir/flags.make
 CMakeFiles/NeuroMisil.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/NeuroMisil.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/NeuroMisil.dir/main.cpp.o -c "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/main.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/NeuroMisil.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/NeuroMisil.dir/main.cpp.o -c "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/main.cpp"
 
 CMakeFiles/NeuroMisil.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/NeuroMisil.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/main.cpp" > CMakeFiles/NeuroMisil.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/main.cpp" > CMakeFiles/NeuroMisil.dir/main.cpp.i
 
 CMakeFiles/NeuroMisil.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/NeuroMisil.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/main.cpp" -o CMakeFiles/NeuroMisil.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/main.cpp" -o CMakeFiles/NeuroMisil.dir/main.cpp.s
 
 CMakeFiles/NeuroMisil.dir/main.cpp.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/NeuroMisil.dir/main.cpp.o.provides.build: CMakeFiles/NeuroMisil.dir/m
 
 CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o: CMakeFiles/NeuroMisil.dir/flags.make
 CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o: ../stepdetection.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o -c "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o -c "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.cpp"
 
 CMakeFiles/NeuroMisil.dir/stepdetection.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/NeuroMisil.dir/stepdetection.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.cpp" > CMakeFiles/NeuroMisil.dir/stepdetection.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.cpp" > CMakeFiles/NeuroMisil.dir/stepdetection.cpp.i
 
 CMakeFiles/NeuroMisil.dir/stepdetection.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/NeuroMisil.dir/stepdetection.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.cpp" -o CMakeFiles/NeuroMisil.dir/stepdetection.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/stepdetection.cpp" -o CMakeFiles/NeuroMisil.dir/stepdetection.cpp.s
 
 CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o.requires:
 
@@ -107,16 +107,16 @@ CMakeFiles/NeuroMisil.dir/stepdetection.cpp.o.provides.build: CMakeFiles/NeuroMi
 
 CMakeFiles/NeuroMisil.dir/Paltas.cpp.o: CMakeFiles/NeuroMisil.dir/flags.make
 CMakeFiles/NeuroMisil.dir/Paltas.cpp.o: ../Paltas.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/NeuroMisil.dir/Paltas.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/NeuroMisil.dir/Paltas.cpp.o -c "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Paltas.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/NeuroMisil.dir/Paltas.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/NeuroMisil.dir/Paltas.cpp.o -c "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Paltas.cpp"
 
 CMakeFiles/NeuroMisil.dir/Paltas.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/NeuroMisil.dir/Paltas.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Paltas.cpp" > CMakeFiles/NeuroMisil.dir/Paltas.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Paltas.cpp" > CMakeFiles/NeuroMisil.dir/Paltas.cpp.i
 
 CMakeFiles/NeuroMisil.dir/Paltas.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/NeuroMisil.dir/Paltas.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Paltas.cpp" -o CMakeFiles/NeuroMisil.dir/Paltas.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Paltas.cpp" -o CMakeFiles/NeuroMisil.dir/Paltas.cpp.s
 
 CMakeFiles/NeuroMisil.dir/Paltas.cpp.o.requires:
 
@@ -191,7 +191,7 @@ NeuroMisil: /usr/local/lib/libopencv_core.so.3.4.1
 NeuroMisil: /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.5.1
 NeuroMisil: /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.5.1
 NeuroMisil: CMakeFiles/NeuroMisil.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable NeuroMisil"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable NeuroMisil"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/NeuroMisil.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -210,6 +210,6 @@ CMakeFiles/NeuroMisil.dir/clean:
 .PHONY : CMakeFiles/NeuroMisil.dir/clean
 
 CMakeFiles/NeuroMisil.dir/depend:
-	cd "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil" "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil" "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug" "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug" "/home/lalo/Desktop/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/NeuroMisil.dir/DependInfo.cmake" --color=$(COLOR)
+	cd "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil" "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil" "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug" "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug" "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug/CMakeFiles/NeuroMisil.dir/DependInfo.cmake" --color=$(COLOR)
 .PHONY : CMakeFiles/NeuroMisil.dir/depend
 

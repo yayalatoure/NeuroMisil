@@ -20,14 +20,11 @@ int main(int argc, char *argv[]){
 
     cv::Mat img_cal, img_test, img_proc, labels, labels2;
 
-    //// Kalmar Init ////
-    KalmanInit(*(&kf_R));
-
     // Images Reading
-    string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/CALIBRACION01/*.jpg";
-    string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/TEST01/*.jpg";
-//    std::string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/2_CAMARAS/FEED1/*.jpg";
-//    std::string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/2_CAMARAS/FEED1/*.jpg";
+//    string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/CALIBRACION01/*.jpg";
+//    string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/TEST01/*.jpg";
+    std::string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/2_CAMARAS/FEED1/*.jpg";
+    std::string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/2_CAMARAS/FEED1/*.jpg";
 
     // Flag start detection
     bool start = false;
@@ -54,6 +51,10 @@ int main(int argc, char *argv[]){
     double errork1_R = 0, errork1_L=0;
 
 
+    //// Kalmar Init ////
+    KalmanInit(*(&kf_R));
+    KalmanInit(*(&kf_L));
+
     while(ch != 'q' && ch != 'Q'){
 
         ////////// Frame Acquisition /////////
@@ -78,14 +79,15 @@ int main(int argc, char *argv[]){
             //////// 2D Feet Boxes ////////
             FindBoxes(&img_out, img_proc, start, &found);
 
-
             //////// Kalman Prediction ////////
             if(found){
-                KalmanPredict(&img_out, *(&kf_R), state_R, &predRect_R, &center_kalman_R, dT);
+                KalmanPredict(&img_out, *(&kf_R), &state_R, &predRect_R, &center_kalman_R, dT);
+                KalmanPredict(&img_out, *(&kf_L), &state_L, &predRect_L, &center_kalman_L, dT);
             }
 
             ////// Kalman Reset & Step ///////
-            KalmanResetAndStep(&img_out, &center_kalman_R, &center_measured_R, &predRect_R, &errork1_R, &found);
+            KalmanResetAndStep(&img_out, &center_kalman_R, &center_measured_R, &predRect_R, &errork1_R, &Reset_R, Right);
+            KalmanResetAndStep(&img_out, &center_kalman_L, &center_measured_L, &predRect_L, &errork1_L, &Reset_L, Left);
 
             ///// Logging /////
             if(start){
@@ -97,8 +99,8 @@ int main(int argc, char *argv[]){
 //            cout << "Posicion X medida: " << center_measured_R.x << endl;
 
             ////////// Kalman Update //////////
-            KalmanUpdate(&img_out, *(&kf_R), &notFoundCount, &state_R, &meas_R, &found);
-            cout << kf_R.statePost << endl;
+            KalmanUpdate(&img_out, *(&kf_R), &notFoundCount, &state_R, &meas_R, &found, &Reset_R, Right);
+            KalmanUpdate(&img_out, *(&kf_L), &notFoundCount, &state_L, &meas_L, &found, &Reset_L, Left);
 
 
 
@@ -159,13 +161,12 @@ int main(int argc, char *argv[]){
 
         if(start && (img_out.img.data)){
             imshow("Algoritmo", img_out.img);
-//            imshow("Segmentación", img_out.seg);
+            imshow("Segmentación", img_out.seg);
         }
 
         count_cal++;
         count_test++;
         ch = char(cv::waitKey(0));
-
 
     }
 
