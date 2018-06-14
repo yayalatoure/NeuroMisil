@@ -1,4 +1,4 @@
-/opt/clion-2018.1/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil"
+/home/lalo/Desktop/Programas/clion-2018.1/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil"
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/cmake-build-debug

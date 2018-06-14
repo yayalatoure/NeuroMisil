@@ -21,10 +21,10 @@ int main(int argc, char *argv[]){
     cv::Mat img_cal, img_test, img_proc, labels, labels2;
 
     // Images Reading
-//    string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/CALIBRACION01/*.jpg";
-//    string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/TEST01/*.jpg";
-    std::string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/2_CAMARAS/FEED1/*.jpg";
-    std::string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/2_CAMARAS/FEED1/*.jpg";
+    string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/CALIBRACION01/*.jpg";
+    string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/TEST01/*.jpg";
+//    std::string path_test = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/2_CAMARAS/FEED1/*.jpg";
+//    std::string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/2_CAMARAS/FEED1/*.jpg";
 
     // Flag start detection
     bool start = false;
@@ -45,11 +45,10 @@ int main(int argc, char *argv[]){
     ofStream << "Frame" << "," << "CX_Kalman" << "," << "CY_Kalman" << "," << "CX_Measured" << "," << "CY,Measured" << "," << "Pie" << "\n";
 
     char ch = 0;
-    int  dT = 1;
+    int  dT = 0;
     bool found = false;
 
     double errork1_R = 0, errork1_L=0;
-
 
     //// Kalmar Init ////
     KalmanInit(*(&kf_R));
@@ -69,7 +68,7 @@ int main(int argc, char *argv[]){
             substring = filenames_test[count_test].substr(pos-digits);
             img_proc  = img_test;
             start = true;
-//            found = true;
+
         }
 
         ///// Algoritmo /////
@@ -90,67 +89,14 @@ int main(int argc, char *argv[]){
             KalmanResetAndStep(&img_out, &center_kalman_L, &center_measured_L, &predRect_L, &errork1_L, &Reset_L, Left);
 
             ///// Logging /////
-            if(start){
+            if(start) {
                 ofStream << substring << "," << center_kalman_R.x << "," << center_kalman_R.y << ",";
                 ofStream << center_measured_R.x << "," << center_measured_R.y << "," << "Rigth" << "\n";
             }
-//            cout << "Frame actual: " << filenames_test[count_test].substr(pos-digits) << endl;
-//            cout << "Posicion X predecida: " << state_R.at<float>(0) << endl;
-//            cout << "Posicion X medida: " << center_measured_R.x << endl;
 
             ////////// Kalman Update //////////
             KalmanUpdate(&img_out, *(&kf_R), &notFoundCount, &state_R, &meas_R, &found, &Reset_R, Right);
             KalmanUpdate(&img_out, *(&kf_L), &notFoundCount, &state_L, &meas_L, &found, &Reset_L, Left);
-
-
-
-            // Cuando no encuentra caja
-//            if (img_out.fboxes[1].width <= 0){
-//                notFoundCount++;
-//                if( notFoundCount >= 100 ){
-//                    found = false;
-//                }else
-//                    kf_R.statePost = state_R;
-//            }else{
-//                // Si se encuentra una caja, realiza medición
-//                // Si hay ocultamiento asigna a medida derecha centro de primer cuadro detectado
-//                if (img_out.fboxes.size() == 1) {
-//                    meas_R.at<float>(0) = img_out.fboxes[1].x + float(img_out.fboxes[1].width);
-//                    meas_R.at<float>(1) = img_out.fboxes[1].y + float(img_out.fboxes[1].height) / 2;
-//                    meas_R.at<float>(2) = (float) state_R.at<float>(4);
-//                    meas_R.at<float>(3) = (float) state_R.at<float>(5);
-//                // Si no hay ocultamiento adigna a medida derecha centro de segundo cuadro detectado
-//                } else {
-//                    meas_R.at<float>(0) = img_out.fboxes[2].x + float(img_out.fboxes[2].width) / 2;
-//                    meas_R.at<float>(1) = img_out.fboxes[2].y + float(img_out.fboxes[2].height) / 2;
-//                    meas_R.at<float>(2) = (float) img_out.fboxes[2].width;
-//                    meas_R.at<float>(3) = (float) img_out.fboxes[2].height;
-//                }
-//
-//                if (!found) { // First detection!
-//                    // >>>> Initialization
-//                    kf_R.errorCovPre.at<float>(0) = 1; // px
-//                    kf_R.errorCovPre.at<float>(7) = 1; // px
-//                    kf_R.errorCovPre.at<float>(14) = 1;
-//                    kf_R.errorCovPre.at<float>(21) = 1;
-//                    kf_R.errorCovPre.at<float>(28) = 1; // px
-//                    kf_R.errorCovPre.at<float>(35) = 1; // px
-//
-//                    state_R.at<float>(0) = meas_R.at<float>(0);
-//                    state_R.at<float>(1) = meas_R.at<float>(1);
-//                    state_R.at<float>(2) = 0;
-//                    state_R.at<float>(3) = 0;
-//                    state_R.at<float>(4) = meas_R.at<float>(2);
-//                    state_R.at<float>(5) = meas_R.at<float>(3);
-//                    // <<<< Initialization
-//                    found = true;
-//                    kf_R.statePost = state_R;
-//
-//                }else{
-//                    kf_R.correct(meas_R); // Kalman Correction
-//                }
-//                notFoundCount = 0;
-//            }
 
         }
 
@@ -159,8 +105,8 @@ int main(int argc, char *argv[]){
         if (count_cal < limit)
             if (img_test.data) cv::imshow("Algoritmo", img_test);
 
-        if(start && (img_out.img.data)){
-            imshow("Algoritmo", img_out.img);
+        if(start && (img_out.img.data) && img_test.data){
+            imshow("Algoritmo", img_test);
             imshow("Segmentación", img_out.seg);
         }
 
@@ -169,6 +115,7 @@ int main(int argc, char *argv[]){
         ch = char(cv::waitKey(0));
 
     }
+
 
     return 0;
 

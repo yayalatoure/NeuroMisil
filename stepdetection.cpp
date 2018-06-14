@@ -35,15 +35,16 @@ void KalmanInit(cv::KalmanFilter kf){
     // [ 0    0   0     0     Ew   0  ]
     // [ 0    0   0     0     0    Eh ]
     //cv::setIdentity(kf.processNoiseCov, cv::Scalar(1e-2));
-    kf.processNoiseCov.at<float>(0) = 1e-2;
-    kf.processNoiseCov.at<float>(7) = 1e-2;
-    kf.processNoiseCov.at<float>(14) = 1e-2;// 5.0f
-    kf.processNoiseCov.at<float>(21) = 1e-2;// 5.0f
-    kf.processNoiseCov.at<float>(28) = 1e-2;
-    kf.processNoiseCov.at<float>(35) = 1e-2;
+    kf.processNoiseCov.at<float>(0) = 0.01;
+    kf.processNoiseCov.at<float>(7) = 0.01;
+    kf.processNoiseCov.at<float>(14) = 0.1f;// 5.0f
+    kf.processNoiseCov.at<float>(21) = 0.1f;// 5.0f
+    kf.processNoiseCov.at<float>(28) = 0.01;
+    kf.processNoiseCov.at<float>(35) = 0.01;
 
     // Measures Noise Covariance Matrix R
-    cv::setIdentity(kf.measurementNoiseCov, cv::Scalar(1e-2));
+    cv::setIdentity(kf.measurementNoiseCov, cv::Scalar(0.01));
+
 
 }
 
@@ -55,16 +56,18 @@ void KalmanPredict(frame_out *img_out, cv::KalmanFilter kf, cv::Mat *state, cv::
     /////// Prediction ///////
     *state = kf.predict();
 
+
     ////// Predicted Rect Red //////
     (*predRect).width = static_cast<int>((*state).at<float>(4));
     (*predRect).height = static_cast<int>((*state).at<float>(5));
     (*predRect).x = static_cast<int>((*state).at<float>(0) - (*state).at<float>(4)/2);
     (*predRect).y = static_cast<int>((*state).at<float>(1) - (*state).at<float>(5)/2);
-//    cv::rectangle((*img_out).img, *predRect, CV_RGB(255,0,0), 2);
+    cv::rectangle((*img_out).img, *predRect, CV_RGB(255,0,0), 2);
     //// Predicted Point ////
     (*center_kalman).x = static_cast<int>((*state).at<float>(0));
     (*center_kalman).y = static_cast<int>((*state).at<float>(1));
     cv::circle((*img_out).img, *center_kalman, 2, CV_RGB(255,0,0), -1);
+
 
 }
 
@@ -95,14 +98,15 @@ void KalmanResetAndStep(frame_out *img_out, cv::Point *center_kalman, cv::Point 
 
     errork2 = distance(&(*center_kalman), &(*center_measured));
 
-    if ( abs(*errork1) > 2 ){
-        *reset = false;
+    if ( abs(*errork1) > 1.5 ){
+        *reset = true;
     }
 
-    if(!ocultamiento & (*reset)){
+    if(!ocultamiento & !(*reset)){
         errorp = (errork2 + (*errork1))/2;
-        if(errorp < 3)
+        if(errorp < 2)
             cv::rectangle((*img_out).img, *predRect, CV_RGB(0,0,255), 2);
+
     }
 
     *errork1 = errork2;
@@ -113,7 +117,7 @@ double distance(cv::Point *center_kalman, cv::Point *center_measured){
     double dx = 0, dy = 0, result=0;
     dx = pow(((*center_kalman).x - (*center_measured).x), 2);
     dy = pow(((*center_kalman).y - (*center_measured).y), 2);
-    result = dx; // + dy; //sqrt(dx + dy);
+    result = sqrt(0.7*dx + 0.3*dy);
     return result;
 }
 
@@ -155,7 +159,7 @@ void KalmanUpdate(frame_out *img_out, cv::KalmanFilter kf, int *notFoundCount, c
             }
         }
         // cambie flag reset por found
-        if (!(*reset)){ // First detection!
+        if (*reset){ // First detection!
             // >>>> Initialization
             kf.errorCovPre.at<float>(0) = 1; // px
             kf.errorCovPre.at<float>(7) = 1; // px
@@ -179,7 +183,7 @@ void KalmanUpdate(frame_out *img_out, cv::KalmanFilter kf, int *notFoundCount, c
             kf.statePost.at<float>(4) = (*state).at<float>(4);
             kf.statePost.at<float>(5) = (*state).at<float>(5);
 
-            *reset = true;
+            *reset = false;
 
         }else{
             kf.correct(*measure); // Kalman Correction
@@ -237,7 +241,7 @@ void paintRectangles(cv::Mat &img, std::map<int, cv::Rect> &bboxes){
     std::map<int, cv::Rect>::iterator it, it_end = bboxes.end();
 
     for(it = bboxes.begin(); it != it_end; it++) {
-//        cv::rectangle(img, it->second, cv::Scalar(0,255,0), 2);
+        cv::rectangle(img, it->second, cv::Scalar(0,255,0), 2);
     }
 
 }
@@ -301,7 +305,6 @@ void getFeet(cv::Mat fg, std::map<int, cv::Rect> &bboxes, cv::Mat labels, cv::Ma
         Direccion = (Direc < 0) ? "Left" : "Rigth" ;
     }
 
-//    cout << "\n Dirección: " <<  Direccion << endl;
     flag_direc = Direccion;
 
     Mat mask = Mat::zeros(fg.size(), CV_8U);

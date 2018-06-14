@@ -47,7 +47,7 @@ double distance(cv::Point *center_kalman, cv::Point *center_measured);
 static int Xk0 = 0, Xk1 = 0;
 static string flag_direc;
 static int Left = 1, Right = 2;
-static bool Reset_R = 0, Reset_L = 0;
+static bool Reset_R = false, Reset_L = false;
 
 //// Rectangulo y centro kalman ////
 static cv::Rect predRect_R;                          // NOLINT
