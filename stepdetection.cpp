@@ -35,15 +35,15 @@ void KalmanInit(cv::KalmanFilter kf){
     // [ 0    0   0     0     Ew   0  ]
     // [ 0    0   0     0     0    Eh ]
     //cv::setIdentity(kf.processNoiseCov, cv::Scalar(1e-2));
-    kf.processNoiseCov.at<float>(0) = 0.01;
-    kf.processNoiseCov.at<float>(7) = 0.01;
-    kf.processNoiseCov.at<float>(14) = 0.1f;// 5.0f
-    kf.processNoiseCov.at<float>(21) = 0.1f;// 5.0f
-    kf.processNoiseCov.at<float>(28) = 0.01;
-    kf.processNoiseCov.at<float>(35) = 0.01;
+    kf.processNoiseCov.at<float>(0) = 1e-2;
+    kf.processNoiseCov.at<float>(7) = 1e-2;
+    kf.processNoiseCov.at<float>(14) = 1.0f;// 5.0f
+    kf.processNoiseCov.at<float>(21) = 1.0f;// 5.0f
+    kf.processNoiseCov.at<float>(28) = 1e-2;
+    kf.processNoiseCov.at<float>(35) = 1e-2;
 
     // Measures Noise Covariance Matrix R
-    cv::setIdentity(kf.measurementNoiseCov, cv::Scalar(0.01));
+    cv::setIdentity(kf.measurementNoiseCov, cv::Scalar(1e-2));
 
 
 }
@@ -55,7 +55,6 @@ void KalmanPredict(frame_out *img_out, cv::KalmanFilter kf, cv::Mat *state, cv::
 
     /////// Prediction ///////
     *state = kf.predict();
-
 
     ////// Predicted Rect Red //////
     (*predRect).width = static_cast<int>((*state).at<float>(4));
@@ -71,6 +70,80 @@ void KalmanPredict(frame_out *img_out, cv::KalmanFilter kf, cv::Mat *state, cv::
 
 }
 
+void MeasureError(frame_out *img_out, cv::Point *center_kalman, cv::Point *center_measured, double *errork2, int pie){
+
+    double error;
+    bool ocultamiento;
+
+    ocultamiento = bool((*img_out).fboxes.size() == 1);
+
+    if(ocultamiento){
+        if(pie == Right) {
+            (*center_measured).x = (*img_out).fboxes[Right].x + (*img_out).fboxes[Right].width / 4;
+            (*center_measured).y = (*img_out).fboxes[Right].y + (*img_out).fboxes[Right].height / 2;
+        }else{
+            (*center_measured).x = (*img_out).fboxes[Right].x + ((*img_out).fboxes[Right].width*3) / 4;
+            (*center_measured).y = (*img_out).fboxes[Right].y + (*img_out).fboxes[Right].height / 2;
+        }
+    }else{
+        if(pie == Right) {
+            (*center_measured).x = (*img_out).fboxes[Right].x + (*img_out).fboxes[Right].width / 2;
+            (*center_measured).y = (*img_out).fboxes[Right].y + (*img_out).fboxes[Right].height / 2;
+        }else{
+            (*center_measured).x = (*img_out).fboxes[Left].x + (*img_out).fboxes[Left].width / 2;
+            (*center_measured).y = (*img_out).fboxes[Left].y + (*img_out).fboxes[Left].height / 2;
+        }
+    }
+
+    error = distance(&(*center_kalman), &(*center_measured));
+    *errork2 = error;
+
+}
+
+double distance(cv::Point *center_kalman, cv::Point *center_measured){
+    double dx = 0, dy = 0, result=0;
+    dx = pow(((*center_kalman).x - (*center_measured).x), 2);
+    dy = pow(((*center_kalman).y - (*center_measured).y), 2);
+    result = dx;
+    return result;
+}
+
+void KalmanResetStep(ofstream &fileout, string substring, frame_out *img_out, double *errork1, double errork2, bool *reset, int pie){
+
+    double error;
+    bool ocultamiento;
+
+    ocultamiento = bool((*img_out).fboxes.size() == 1);
+
+
+    if ( abs(errork2) > 3 ){
+        *reset = true;
+    }
+
+    if(!ocultamiento & !(*reset)){
+        error = errork2; //(errork2 + (*errork1))/2;
+        if(abs(error) < 3) {
+            cv::rectangle((*img_out).img, (*img_out).fboxes[pie], CV_RGB(0, 0, 255), 2);
+
+            //// Logging
+
+            QRect r = QRect((*img_out).fboxes[pie].x, (*img_out).fboxes[pie].y, (*img_out).fboxes[pie].height, (*img_out).fboxes[pie].width);
+
+            if(pie == Right){
+                fileout << substring << "," << r.center().x() << "," << r.center().y() << "," <<
+                        (*img_out).fboxes[pie].height <<","<<  (*img_out).fboxes[pie].width <<","<<"Rigth"<<"\n";
+            }else{
+                fileout << substring << "," << r.center().x() << "," << r.center().y() << "," <<
+                        (*img_out).fboxes[pie].height <<","<<  (*img_out).fboxes[pie].width <<","<<"Left"<<"\n";
+            }
+
+        }
+    }
+
+    *errork1 = errork2;
+
+}
+
 void KalmanResetAndStep(frame_out *img_out, cv::Point *center_kalman, cv::Point *center_measured, cv::Rect *predRect, double *errork1, bool *reset, int pie){
 
     double errork2, errorp;
@@ -80,11 +153,11 @@ void KalmanResetAndStep(frame_out *img_out, cv::Point *center_kalman, cv::Point 
 
     if(ocultamiento){
         if(pie == Right) {
-            (*center_measured).x = (*img_out).fboxes[Left].x + ((*img_out).fboxes[Left].width*3) / 4;
-            (*center_measured).y = (*img_out).fboxes[Left].y + (*img_out).fboxes[Left].height / 2;
+            (*center_measured).x = (*img_out).fboxes[Right].x + (*img_out).fboxes[Right].width / 4;
+            (*center_measured).y = (*img_out).fboxes[Right].y + (*img_out).fboxes[Right].height / 2;
         }else{
-            (*center_measured).x = (*img_out).fboxes[Left].x + (*img_out).fboxes[Left].width / 4;
-            (*center_measured).y = (*img_out).fboxes[Left].y + (*img_out).fboxes[Left].height / 2;
+            (*center_measured).x = (*img_out).fboxes[Right].x + ((*img_out).fboxes[Right].width*3) / 4;
+            (*center_measured).y = (*img_out).fboxes[Right].y + (*img_out).fboxes[Right].height / 2;
         }
     }else{
         if(pie == Right) {
@@ -103,25 +176,20 @@ void KalmanResetAndStep(frame_out *img_out, cv::Point *center_kalman, cv::Point 
     }
 
     if(!ocultamiento & !(*reset)){
-        errorp = (errork2 + (*errork1))/2;
+        errorp = (errork2 ); // (errork2 + (*errork1))/2;
         if(errorp < 2)
-            cv::rectangle((*img_out).img, *predRect, CV_RGB(0,0,255), 2);
-
+           cv::rectangle((*img_out).img, *predRect, CV_RGB(0,0,255), 2);
     }
 
     *errork1 = errork2;
 
 }
 
-double distance(cv::Point *center_kalman, cv::Point *center_measured){
-    double dx = 0, dy = 0, result=0;
-    dx = pow(((*center_kalman).x - (*center_measured).x), 2);
-    dy = pow(((*center_kalman).y - (*center_measured).y), 2);
-    result = sqrt(0.7*dx + 0.3*dy);
-    return result;
-}
 
 void KalmanUpdate(frame_out *img_out, cv::KalmanFilter kf, int *notFoundCount, cv::Mat *state, cv::Mat *measure, bool *found, bool *reset, int pie){
+
+    bool ocultamiento;
+    ocultamiento = bool((*img_out).fboxes.size() == 1);
 
     // Cuando no encuentra caja
     if ((*img_out).fboxes[1].width <= 0){
@@ -138,10 +206,10 @@ void KalmanUpdate(frame_out *img_out, cv::KalmanFilter kf, int *notFoundCount, c
         }
     }else{
         // Si se encuentra una caja, realiza medición
-        // Si hay ocultamiento asigna a medida derecha centro de primer cuadro detectado
-        if ((*img_out).fboxes.size() == 1) {
-            (*measure).at<float>(0) = (*img_out).fboxes[Left].x + float((*img_out).fboxes[Left].width);
-            (*measure).at<float>(1) = (*img_out).fboxes[Left].y + float((*img_out).fboxes[Left].height) / 2;
+
+        if (ocultamiento) {
+            (*measure).at<float>(0) = (*img_out).fboxes[Right].x + float((*img_out).fboxes[Right].width);
+            (*measure).at<float>(1) = (*img_out).fboxes[Right].y + float((*img_out).fboxes[Right].height) / 2;
             (*measure).at<float>(2) = (float) (*state).at<float>(4);
             (*measure).at<float>(3) = (float) (*state).at<float>(5);
             // Si no hay ocultamiento adigna a medida derecha centro de segundo cuadro detectado

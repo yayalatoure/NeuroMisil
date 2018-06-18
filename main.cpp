@@ -18,7 +18,7 @@ using namespace cv;
 
 int main(int argc, char *argv[]){
 
-    cv::Mat img_cal, img_test, img_proc, labels, labels2;
+    cv::Mat img_cal, img_test, img_proc, img_show, labels, labels2;
 
     // Images Reading
     string path_cal  = "/home/lalo/Dropbox/Proyecto IPD441/Data/Videos/1_CAMARA/CALIBRACION01/*.jpg";
@@ -39,16 +39,16 @@ int main(int argc, char *argv[]){
     //// Logging error Kalman (frames) ////
     int digits = 5;
     string fileName, substring;
-    fileName = "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Logging/error_KalmanRight.csv";
+    fileName = "/home/lalo/Dropbox/Proyecto IPD441/NeuroMisil_Lalo/NeuroMisil/Logging/pasos_result.csv";
     ofstream ofStream(fileName);
     size_t pos = filenames_test[count_test].find(".jpg");
-    ofStream << "Frame" << "," << "CX_Kalman" << "," << "CY_Kalman" << "," << "CX_Measured" << "," << "CY,Measured" << "," << "Pie" << "\n";
+    ofStream << "Frame" << "," << "CX_Paso" << "," << "CY_Paso" << "," << "W_Paso" << "." << "H_Paso" << "," << "Pie" << "\n";
 
     char ch = 0;
     int  dT = 0;
     bool found = false;
 
-    double errork1_R = 0, errork1_L=0;
+    double errork1_R = 0, errork1_L=0, errork2_R = 0, errork2_L=0;
 
     //// Kalmar Init ////
     KalmanInit(*(&kf_R));
@@ -65,13 +65,18 @@ int main(int argc, char *argv[]){
 
         }else{
             img_test  = imread(filenames_test[count_test], CV_LOAD_IMAGE_COLOR);
+            img_show = imread(filenames_test[count_test], CV_LOAD_IMAGE_COLOR);
             substring = filenames_test[count_test].substr(pos-digits);
             img_proc  = img_test;
             start = true;
 
+            cout << substring << '\n' << endl;
+
         }
 
+
         ///// Algoritmo /////
+
 
         if(img_proc.data) {
 
@@ -84,15 +89,16 @@ int main(int argc, char *argv[]){
                 KalmanPredict(&img_out, *(&kf_L), &state_L, &predRect_L, &center_kalman_L, dT);
             }
 
-            ////// Kalman Reset & Step ///////
-            KalmanResetAndStep(&img_out, &center_kalman_R, &center_measured_R, &predRect_R, &errork1_R, &Reset_R, Right);
-            KalmanResetAndStep(&img_out, &center_kalman_L, &center_measured_L, &predRect_L, &errork1_L, &Reset_L, Left);
+            //// Kalman Reset & Step ///////
+            MeasureError(&img_out, &center_kalman_R, &center_measured_R, &errork2_R, Right);
+            KalmanResetStep(ofStream, substring, &img_out, &errork1_R, errork2_R, &Reset_R, Right);
 
-            ///// Logging /////
-            if(start) {
-                ofStream << substring << "," << center_kalman_R.x << "," << center_kalman_R.y << ",";
-                ofStream << center_measured_R.x << "," << center_measured_R.y << "," << "Rigth" << "\n";
-            }
+            MeasureError(&img_out, &center_kalman_L, &center_measured_L, &errork2_L, Left);
+            KalmanResetStep(ofStream, substring, &img_out, &errork1_L, errork2_L, &Reset_L, Left);
+
+//            KalmanResetAndStep(&img_out, &center_kalman_R, &center_measured_R, &predRect_R, &errork1_R, &Reset_R, Right);
+//            KalmanResetAndStep(&img_out, &center_kalman_L, &center_measured_L, &predRect_L, &errork1_L, &Reset_L, Left);
+
 
             ////////// Kalman Update //////////
             KalmanUpdate(&img_out, *(&kf_R), &notFoundCount, &state_R, &meas_R, &found, &Reset_R, Right);
@@ -105,9 +111,9 @@ int main(int argc, char *argv[]){
         if (count_cal < limit)
             if (img_test.data) cv::imshow("Algoritmo", img_test);
 
-        if(start && (img_out.img.data) && img_test.data){
-            imshow("Algoritmo", img_test);
-            imshow("Segmentación", img_out.seg);
+        if(start && (img_out.img.data) && img_show.data){
+            imshow("Input", img_show);
+            imshow("Algoritmo", img_out.img);
         }
 
         count_cal++;
@@ -115,7 +121,6 @@ int main(int argc, char *argv[]){
         ch = char(cv::waitKey(0));
 
     }
-
 
     return 0;
 

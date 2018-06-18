@@ -36,9 +36,20 @@ void getFeet(Mat fg, map<int, Rect> &bboxes, Mat labels, Mat labels2, map<int, R
 
 //// New Functions ////
 void getFileInput (ofstream &);
+
 void KalmanInit(cv::KalmanFilter kf);
 void KalmanPredict(frame_out *img_out, cv::KalmanFilter kf, cv::Mat *state, cv::Rect *predRect, cv::Point *center_kalman, int dT);
+
+
+
+void MeasureError(frame_out *img_out, cv::Point *center_kalman, cv::Point *center_measured, double *errork2, int pie);
+
+void KalmanResetStep(ofstream &fileout, string substring, frame_out *img_out, double *errork1, double errork2, bool *reset, int pie);
+
+
 void KalmanResetAndStep(frame_out *img_out, cv::Point *center_kalman, cv::Point *center_measured, cv::Rect *predRect, double *errork1, bool *reset, int pie);
+
+
 void KalmanUpdate(frame_out *img_out, cv::KalmanFilter kf, int *notFoundCount, cv::Mat *state, cv::Mat *measure, bool *found, bool *reset, int pie);
 void FindBoxes(frame_out *img_out, cv::Mat img, bool start, bool *found);
 double distance(cv::Point *center_kalman, cv::Point *center_measured);
@@ -46,7 +57,7 @@ double distance(cv::Point *center_kalman, cv::Point *center_measured);
 //// New Variables ////
 static int Xk0 = 0, Xk1 = 0;
 static string flag_direc;
-static int Left = 1, Right = 2;
+static int Left = 2, Right = 1;
 static bool Reset_R = false, Reset_L = false;
 
 //// Rectangulo y centro kalman ////
