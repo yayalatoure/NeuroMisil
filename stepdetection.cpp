@@ -64,7 +64,7 @@ void KalmanPredict(frame_out *img_out, cv::KalmanFilter kf, cv::Mat *state, cv::
     cv::rectangle((*img_out).img, *predRect, CV_RGB(255,0,0), 2);
     //// Predicted Point ////
     (*center_kalman).x = static_cast<int>((*state).at<float>(0));
-    (*center_kalman).y = static_cast<int>((*state).at<float>(1));
+    (*center_kalman).y = static_cast<int>((*state).at<float>(1)); ////static_cast<int>((*state).at<float>(1) + (*state).at<float>(5)/2);
     cv::circle((*img_out).img, *center_kalman, 2, CV_RGB(255,0,0), -1);
 
 
@@ -104,7 +104,7 @@ double distance(cv::Point *center_kalman, cv::Point *center_measured){
     double dx = 0, dy = 0, result=0;
     dx = pow(((*center_kalman).x - (*center_measured).x), 2);
     dy = pow(((*center_kalman).y - (*center_measured).y), 2);
-    result = dx;
+    result = dx + dy;
     return result;
 }
 
@@ -116,13 +116,13 @@ void KalmanResetStep(ofstream &fileout, string substring, frame_out *img_out, do
     ocultamiento = bool((*img_out).fboxes.size() == 1);
 
 
-    if ( abs(errork2) > 3 ){
+    if ( abs(errork2) > 2.5 ){
         *reset = true;
     }
 
     if(!ocultamiento & !(*reset)){
         error = errork2; //(errork2 + (*errork1))/2;
-        if(abs(error) < 3) {
+        if(abs(error) < 2.5) {
             cv::rectangle((*img_out).img, (*img_out).fboxes[pie], CV_RGB(0, 0, 255), 2);
 
             //// Logging
@@ -198,7 +198,7 @@ void KalmanUpdate(frame_out *img_out, cv::KalmanFilter kf, int *notFoundCount, c
             *found = false;
         }else{
             kf.statePost.at<float>(0) = (*state).at<float>(0);
-            kf.statePost.at<float>(1) = (*state).at<float>(1);
+            kf.statePost.at<float>(1) = (*state).at<float>(1); ////(*state).at<float>(1) + (*state).at<float>(5)/2;
             kf.statePost.at<float>(2) = (*state).at<float>(2);
             kf.statePost.at<float>(3) = (*state).at<float>(3);
             kf.statePost.at<float>(4) = (*state).at<float>(4);
@@ -208,11 +208,21 @@ void KalmanUpdate(frame_out *img_out, cv::KalmanFilter kf, int *notFoundCount, c
         // Si se encuentra una caja, realiza medición
 
         if (ocultamiento) {
-            (*measure).at<float>(0) = (*img_out).fboxes[Right].x + float((*img_out).fboxes[Right].width);
-            (*measure).at<float>(1) = (*img_out).fboxes[Right].y + float((*img_out).fboxes[Right].height) / 2;
-            (*measure).at<float>(2) = (float) (*state).at<float>(4);
-            (*measure).at<float>(3) = (float) (*state).at<float>(5);
-            // Si no hay ocultamiento adigna a medida derecha centro de segundo cuadro detectado
+//            (*measure).at<float>(0) = (*img_out).fboxes[Right].x + float((*img_out).fboxes[Right].width);
+//            (*measure).at<float>(1) = (*img_out).fboxes[Right].y + float((*img_out).fboxes[Right].height) / 2;
+//            (*measure).at<float>(2) = (float) (*state).at<float>(4);
+//            (*measure).at<float>(3) = (float) (*state).at<float>(5);
+            if(pie == Right) {
+                (*measure).at<float>(0) = (*img_out).fboxes[Right].x + float((*img_out).fboxes[Right].width) / 4;
+                (*measure).at<float>(1) = (*img_out).fboxes[Right].y + float((*img_out).fboxes[Right].height) / 4;
+                (*measure).at<float>(2) = (float) (*img_out).fboxes[Right].width / 3;
+                (*measure).at<float>(3) = (float) ((*img_out).fboxes[Right].height*3) /4 ;
+            }else if(pie == Left){
+                (*measure).at<float>(0) = (*img_out).fboxes[Right].x + (float((*img_out).fboxes[Right].width)*3) / 4;
+                (*measure).at<float>(1) = (*img_out).fboxes[Right].y + (float((*img_out).fboxes[Right].height)*3) / 4;
+                (*measure).at<float>(2) = (float) (*img_out).fboxes[Right].width / 3;
+                (*measure).at<float>(3) = (float) ((*img_out).fboxes[Right].height*3) /4 ;
+            }
         } else {
             if(pie == Right) {
                 (*measure).at<float>(0) = (*img_out).fboxes[Right].x + float((*img_out).fboxes[Right].width) / 2;
